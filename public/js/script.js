@@ -12,28 +12,110 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // Mobile menu toggle
+  // Mobile sidebar toggle (replaces old mobile menu)
   var hamburger = document.getElementById('hamburger');
-  var navLinks = document.getElementById('navLinks');
+  var sidebar = document.getElementById('mobileSidebar');
   var overlay = document.getElementById('navOverlay');
+  var closeBtn = document.getElementById('sidebarClose');
 
-  function closeMenu() {
-    navLinks.classList.remove('open');
-    overlay.classList.remove('show');
-    hamburger.classList.remove('active');
+  function openSidebar() {
+    if (sidebar) {
+      sidebar.classList.add('open');
+    }
+    if (overlay) {
+      overlay.classList.add('active');
+    }
+    if (hamburger) {
+      hamburger.classList.add('active');
+    }
+    document.body.style.overflow = 'hidden';
   }
 
-  if (hamburger && navLinks) {
-    hamburger.addEventListener('click', function () {
-      navLinks.classList.toggle('open');
-      overlay.classList.toggle('show');
-      hamburger.classList.toggle('active');
+  function closeSidebar() {
+    if (sidebar) {
+      sidebar.classList.remove('open');
+    }
+    if (overlay) {
+      overlay.classList.remove('active');
+    }
+    if (hamburger) {
+      hamburger.classList.remove('active');
+    }
+    document.body.style.overflow = '';
+  }
+
+  if (hamburger && sidebar) {
+    hamburger.addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (sidebar.classList.contains('open')) {
+        closeSidebar();
+      } else {
+        openSidebar();
+      }
     });
-    overlay.addEventListener('click', closeMenu);
-    navLinks.querySelectorAll('a').forEach(function (a) {
-      a.addEventListener('click', closeMenu);
+
+    // Close sidebar when clicking overlay
+    if (overlay) {
+      overlay.addEventListener('click', closeSidebar);
+    }
+
+    // Close sidebar with close button
+    if (closeBtn) {
+      closeBtn.addEventListener('click', closeSidebar);
+    }
+
+    // Close sidebar when clicking a link
+    sidebar.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', closeSidebar);
+    });
+
+    // Close sidebar on Escape key
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && sidebar.classList.contains('open')) {
+        closeSidebar();
+      }
     });
   }
+
+  // Auth Dropdown Toggle (Desktop)
+  var dropdownToggles = document.querySelectorAll('.nav-dropdown-toggle');
+  dropdownToggles.forEach(function (toggle) {
+    toggle.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var menu = this.nextElementSibling;
+      if (menu && menu.classList.contains('nav-dropdown-menu')) {
+        var isOpen = menu.style.display === 'block';
+        // Close all other dropdowns
+        document.querySelectorAll('.nav-dropdown-menu').forEach(function (m) {
+          m.style.display = 'none';
+        });
+        menu.style.display = isOpen ? 'none' : 'block';
+      }
+    });
+  });
+
+  // Close dropdowns when clicking outside
+  document.addEventListener('click', function (e) {
+    var dropdowns = document.querySelectorAll('.nav-dropdown');
+    dropdowns.forEach(function (dropdown) {
+      if (!dropdown.contains(e.target)) {
+        var menu = dropdown.querySelector('.nav-dropdown-menu');
+        if (menu) {
+          menu.style.display = 'none';
+        }
+      }
+    });
+  });
+
+  // Close dropdown on Escape key
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.nav-dropdown-menu').forEach(function (menu) {
+        menu.style.display = 'none';
+      });
+    }
+  });
 
   // Live date in top bar (Hindi locale)
   var dateEl = document.getElementById('topDate');
@@ -92,4 +174,15 @@ document.addEventListener('DOMContentLoaded', function () {
     }, { threshold: 0.15 });
     revealEls.forEach(function (el) { revealObserver.observe(el); });
   }
+
+  // Handle window resize - close sidebar on desktop
+  var resizeTimer;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () {
+      if (window.innerWidth >= 992 && sidebar && sidebar.classList.contains('open')) {
+        closeSidebar();
+      }
+    }, 250);
+  });
 });

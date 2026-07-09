@@ -80,7 +80,7 @@
                         </span>
                         <div>
                             <h5 style="font-size: 15px; font-weight: 600; margin-bottom: 4px; color: #fff;">Phone</h5>
-                            <p style="font-size: 14px; color: #bbb; margin: 0;">+91 91492 61291</p>
+                            <p style="font-size: 14px; color: #bbb; margin: 0;">+91 9250073334</p>
                             <p style="font-size: 13px; color: #888; margin: 2px 0 0;">Mon-Fri, 9AM - 6PM</p>
                         </div>
                     </div>
@@ -114,7 +114,7 @@
                         </span>
                         <div>
                             <h5 style="font-size: 15px; font-weight: 600; margin-bottom: 4px; color: #fff;">WhatsApp</h5>
-                            <p style="font-size: 14px; color: #bbb; margin: 0;">+91 91492 61291</p>
+                            <p style="font-size: 14px; color: #bbb; margin: 0;">+91 9250073334</p>
                             <a href="https://wa.me/919149261291" target="_blank"
                                 style="color: #25D366; font-size: 13px; text-decoration: none; font-weight: 500;">Chat with
                                 us →</a>
@@ -166,12 +166,26 @@
                 </div>
 
                 {{-- Contact Form --}}
-                <form class="form-card reveal delay-1"
+                <form class="form-card reveal delay-1" id="contactForm"
                     style="background: #fff; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);">
+                    @csrf
                     <div style="margin-bottom: 25px;">
                         <h4 style="font-size: 22px; font-weight: 700; color: #1a1a2e; margin-bottom: 6px;">Send a Message
                         </h4>
                         <p style="color: #888; font-size: 14px;">Fill in the details below and we'll get back to you</p>
+                        @auth
+                            <p style="color: #059669; font-size: 13px; margin-top: 8px;">
+                                <strong>✓</strong> You are logged in as <strong>{{ Auth::user()->name }}</strong>. Your details
+                                are auto-filled.
+                            </p>
+                        @endauth
+                        @guest
+                            <p style="color: #f59e0b; font-size: 13px; margin-top: 8px;">
+                                <strong>ℹ️</strong> <a href="{{ route('login') }}"
+                                    style="color: #e74c3c; text-decoration: none; font-weight: 600;">Login</a> to auto-fill
+                                your details.
+                            </p>
+                        @endguest
                     </div>
 
                     <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
@@ -181,9 +195,12 @@
                             <label for="name"
                                 style="display: block; font-weight: 600; font-size: 14px; color: #333; margin-bottom: 6px;">Full
                                 Name <span style="color: #e74c3c;">*</span></label>
-                            <input type="text" id="name" placeholder="Enter your full name"
+                            <input type="text" id="name" name="name" value="{{ Auth::user()->name ?? '' }}"
+                                placeholder="Enter your full name"
                                 style="width: 100%; padding: 14px 16px; border: 2px solid #e8e8e8; border-radius: 10px; font-size: 15px; transition: all 0.3s; outline: none;"
                                 onfocus="this.style.borderColor='#e74c3c'" onblur="this.style.borderColor='#e8e8e8'">
+                            <div class="error-message" id="nameError"
+                                style="color: #e74c3c; font-size: 13px; margin-top: 5px; display: none;"></div>
                         </div>
 
                         {{-- Mobile Number --}}
@@ -191,9 +208,12 @@
                             <label for="mobile"
                                 style="display: block; font-weight: 600; font-size: 14px; color: #333; margin-bottom: 6px;">Mobile
                                 Number <span style="color: #e74c3c;">*</span></label>
-                            <input type="tel" id="mobile" placeholder="+91"
+                            <input type="tel" id="mobile" name="mobile" placeholder="9999999999"
+                                value="{{ Auth::user()->mobile ?? '' }}" min="10" max="10"
                                 style="width: 100%; padding: 14px 16px; border: 2px solid #e8e8e8; border-radius: 10px; font-size: 15px; transition: all 0.3s; outline: none;"
                                 onfocus="this.style.borderColor='#e74c3c'" onblur="this.style.borderColor='#e8e8e8'">
+                            <div class="error-message" id="mobileError"
+                                style="color: #e74c3c; font-size: 13px; margin-top: 5px; display: none;"></div>
                         </div>
 
                         {{-- Email --}}
@@ -201,16 +221,20 @@
                             <label for="email"
                                 style="display: block; font-weight: 600; font-size: 14px; color: #333; margin-bottom: 6px;">Email
                                 Address <span style="color: #e74c3c;">*</span></label>
-                            <input type="email" id="email" placeholder="you@example.com"
+                            <input type="email" id="email" name="email" value="{{ Auth::user()->email ?? '' }}"
+                                placeholder="you@example.com"
                                 style="width: 100%; padding: 14px 16px; border: 2px solid #e8e8e8; border-radius: 10px; font-size: 15px; transition: all 0.3s; outline: none;"
                                 onfocus="this.style.borderColor='#e74c3c'" onblur="this.style.borderColor='#e8e8e8'">
+                            <div class="error-message" id="emailError"
+                                style="color: #e74c3c; font-size: 13px; margin-top: 5px; display: none;"></div>
                         </div>
 
                         {{-- Subject --}}
                         <div style="grid-column: 1 / -1;">
                             <label for="subject"
-                                style="display: block; font-weight: 600; font-size: 14px; color: #333; margin-bottom: 6px;">Subject</label>
-                            <select id="subject"
+                                style="display: block; font-weight: 600; font-size: 14px; color: #333; margin-bottom: 6px;">Subject
+                                <span style="color: #e74c3c;">*</span></label>
+                            <select id="subject" name="subject"
                                 style="width: 100%; padding: 14px 16px; border: 2px solid #e8e8e8; border-radius: 10px; font-size: 15px; transition: all 0.3s; outline: none; background: #fff; cursor: pointer;"
                                 onfocus="this.style.borderColor='#e74c3c'" onblur="this.style.borderColor='#e8e8e8'">
                                 <option value="">Select a subject</option>
@@ -222,44 +246,55 @@
                                 <option value="complaint">Complaint</option>
                                 <option value="other">Other</option>
                             </select>
+                            <div class="error-message" id="subjectError"
+                                style="color: #e74c3c; font-size: 13px; margin-top: 5px; display: none;"></div>
                         </div>
 
                         {{-- Message --}}
-                        <div style="grid-column: 1 / -1; margin-top:30px;">
+                        <div style="grid-column: 1 / -1;">
                             <label for="message"
                                 style="display: block; font-weight: 600; font-size: 14px; color: #333; margin-bottom: 6px;">Message
                                 <span style="color: #e74c3c;">*</span></label>
-                            <textarea id="message" rows="5" placeholder="Write your message in detail..."
+                            <textarea id="message" name="message" rows="5" placeholder="Write your message in detail..."
                                 style="width: 100%; padding: 14px 16px; border: 2px solid #e8e8e8; border-radius: 10px; font-size: 15px; transition: all 0.3s; resize: vertical; font-family: inherit; outline: none;"
                                 onfocus="this.style.borderColor='#e74c3c'" onblur="this.style.borderColor='#e8e8e8'"></textarea>
+                            <div class="error-message" id="messageError"
+                                style="color: #e74c3c; font-size: 13px; margin-top: 5px; display: none;"></div>
+                            <div id="charCount" style="text-align: right; font-size: 12px; color: #999; margin-top: 4px;">
+                                0 / 5000</div>
                         </div>
 
                         {{-- File Upload --}}
-                        {{-- <div style="grid-column: 1 / -1;">
+                        <div style="grid-column: 1 / -1;">
                             <label for="attachment"
                                 style="display: block; font-weight: 600; font-size: 14px; color: #333; margin-bottom: 6px;">Attach
                                 File (Optional)</label>
-                            <input type="file" id="attachment"
+                            <input type="file" id="attachment" name="attachment"
                                 style="width: 100%; padding: 12px; border: 2px dashed #e8e8e8; border-radius: 10px; font-size: 14px; cursor: pointer; background: #fafafa;"
                                 accept=".jpg,.jpeg,.png,.pdf,.doc,.docx">
                             <p style="font-size: 12px; color: #aaa; margin-top: 5px;">Max file size: 5MB. Supported: JPG,
                                 PNG, PDF, DOC</p>
-                        </div> --}}
+                            <div class="error-message" id="attachmentError"
+                                style="color: #e74c3c; font-size: 13px; margin-top: 5px; display: none;"></div>
+                        </div>
 
                         {{-- Privacy Checkbox --}}
                         <div style="grid-column: 1 / -1;">
                             <label
                                 style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px; color: #555;">
-                                <input type="checkbox" style="width: 18px; height: 18px; accent-color: #e74c3c;">
+                                <input type="checkbox" id="privacy" name="privacy" value="1"
+                                    style="width: 18px; height: 18px; accent-color: #e74c3c;">
                                 I agree to the <a href="#"
                                     style="color: #e74c3c; text-decoration: none; font-weight: 500;">Privacy Policy</a> and
-                                terms of service.
+                                terms of service. <span style="color: #e74c3c;">*</span>
                             </label>
+                            <div class="error-message" id="privacyError"
+                                style="color: #e74c3c; font-size: 13px; margin-top: 5px; display: none;"></div>
                         </div>
 
                         {{-- Submit Button --}}
                         <div style="grid-column: 1 / -1;">
-                            <button type="submit" class="btn btn-primary"
+                            <button type="submit" id="submitBtn" class="btn btn-primary"
                                 style="width: 100%; justify-content: center; padding: 16px; background: #e74c3c; color: #fff; border: none; border-radius: 10px; font-size: 17px; font-weight: 700; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 10px;"
                                 onmouseover="this.style.background='#c0392b'"
                                 onmouseout="this.style.background='#e74c3c'">
@@ -271,25 +306,14 @@
                                 Send Message
                             </button>
                         </div>
-
-                        {{-- Response Message --}}
-                        <div style="grid-column: 1 / -1; display: none;" id="formResponse">
-                            <div
-                                style="background: #d4edda; color: #155724; padding: 15px 20px; border-radius: 10px; border-left: 4px solid #28a745; font-size: 14px;">
-                                <strong>✓ Thank you!</strong> Your message has been sent successfully. We'll get back to you
-                                soon.
-                            </div>
-                        </div>
                     </div>
                 </form>
             </div>
         </div>
     </section>
 
-
-
     {{-- ================= FAQ SECTION ================= --}}
-    <section style="padding: 80px 0; background: #fff;">
+    {{-- <section style="padding: 80px 0; background: #fff;">
         <div class="container">
             <div class="section-head reveal" style="text-align: center; margin-bottom: 50px;">
                 <span class="eyebrow"
@@ -300,8 +324,6 @@
             </div>
 
             <div style="max-width: 800px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-
-                {{-- FAQ Item 1 --}}
                 <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; border-left: 4px solid #e74c3c;">
                     <h4 style="font-size: 16px; font-weight: 700; color: #1a1a2e; margin-bottom: 8px;">How can I register
                         for a Reporter ID?</h4>
@@ -309,24 +331,18 @@
                             href="#" style="color: #e74c3c; text-decoration: none;">Reporter Registration</a> page
                         or contact us via the form above.</p>
                 </div>
-
-                {{-- FAQ Item 2 --}}
                 <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; border-left: 4px solid #3498db;">
                     <h4 style="font-size: 16px; font-weight: 700; color: #1a1a2e; margin-bottom: 8px;">What services do you
                         offer?</h4>
                     <p style="font-size: 14px; color: #666; line-height: 1.6; margin: 0;">We provide news reporting,
                         digital media coverage, reporter ID registration, and content publishing services.</p>
                 </div>
-
-                {{-- FAQ Item 3 --}}
                 <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; border-left: 4px solid #2ecc71;">
                     <h4 style="font-size: 16px; font-weight: 700; color: #1a1a2e; margin-bottom: 8px;">How quickly do you
                         respond?</h4>
                     <p style="font-size: 14px; color: #666; line-height: 1.6; margin: 0;">Our team typically responds
                         within 24 hours during business days. For urgent matters, please call us directly.</p>
                 </div>
-
-                {{-- FAQ Item 4 --}}
                 <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; border-left: 4px solid #f39c12;">
                     <h4 style="font-size: 16px; font-weight: 700; color: #1a1a2e; margin-bottom: 8px;">Can I submit a news
                         tip?</h4>
@@ -334,16 +350,11 @@
                         stories, or press releases through our contact form or email us directly.</p>
                 </div>
             </div>
-
-            <div style="text-align: center; margin-top: 30px;">
-                <p style="color: #888; font-size: 14px;">Still have questions? <a href="#"
-                        style="color: #e74c3c; font-weight: 600; text-decoration: none;">View all FAQs →</a></p>
-            </div>
         </div>
-    </section>
+    </section> --}}
 
     {{-- ================= CTA SECTION ================= --}}
-    <section style="padding: 60px 0; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #fff;">
+    {{-- <section style="padding: 60px 0; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #fff;">
         <div class="container">
             <div style="text-align: center; max-width: 700px; margin: 0 auto;">
                 <h3 style="font-size: 28px; font-weight: 700; margin-bottom: 15px; color: #ccc">Want to Collaborate with
@@ -354,26 +365,18 @@
                     <a href="#"
                         style="background: #e74c3c; color: #fff; padding: 14px 35px; border-radius: 30px; text-decoration: none; font-weight: 600; transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px;"
                         onmouseover="this.style.background='#c0392b'" onmouseout="this.style.background='#e74c3c'">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
-                        </svg>
                         Get In Touch
                     </a>
                     <a href="#"
                         style="background: transparent; color: #fff; padding: 14px 35px; border-radius: 30px; text-decoration: none; font-weight: 600; border: 2px solid rgba(255,255,255,0.3); transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px;"
                         onmouseover="this.style.borderColor='#fff'"
                         onmouseout="this.style.borderColor='rgba(255,255,255,0.3)'">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <path d="M4 4l16 16M20 4L4 20" />
-                        </svg>
                         Call Us
                     </a>
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
 
 @endsection
 
@@ -405,6 +408,17 @@
             box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
         }
 
+        input.error,
+        textarea.error,
+        select.error {
+            border-color: #e74c3c !important;
+        }
+
+        input.success,
+        textarea.success {
+            border-color: #2ecc71 !important;
+        }
+
         @media (max-width: 768px) {
             .contact-wrap {
                 grid-template-columns: 1fr !important;
@@ -422,6 +436,9 @@
 @endpush
 
 @push('scripts')
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Reveal animations
@@ -435,52 +452,302 @@
             }, {
                 threshold: 0.1
             });
-
             reveals.forEach(el => observer.observe(el));
 
-            // Form submission handling
-            const form = document.querySelector('.form-card');
-            const responseDiv = document.getElementById('formResponse');
+            // Get form elements
+            const form = document.getElementById('contactForm');
+            const submitBtn = document.getElementById('submitBtn');
 
+            // Character counter for message
+            const messageField = document.getElementById('message');
+            const charCount = document.getElementById('charCount');
+
+            messageField.addEventListener('input', function() {
+                const length = this.value.length;
+                charCount.textContent = length + ' / 5000';
+                if (length > 5000) {
+                    charCount.style.color = '#e74c3c';
+                } else {
+                    charCount.style.color = '#999';
+                }
+            });
+
+            // Real-time validation
+            const fields = {
+                name: {
+                    element: document.getElementById('name'),
+                    error: document.getElementById('nameError'),
+                    rules: ['required']
+                },
+                mobile: {
+                    element: document.getElementById('mobile'),
+                    error: document.getElementById('mobileError'),
+                    rules: ['required', 'mobile']
+                },
+                email: {
+                    element: document.getElementById('email'),
+                    error: document.getElementById('emailError'),
+                    rules: ['required', 'email']
+                },
+                subject: {
+                    element: document.getElementById('subject'),
+                    error: document.getElementById('subjectError'),
+                    rules: ['required']
+                },
+                message: {
+                    element: document.getElementById('message'),
+                    error: document.getElementById('messageError'),
+                    rules: ['required', 'min:10']
+                },
+                privacy: {
+                    element: document.getElementById('privacy'),
+                    error: document.getElementById('privacyError'),
+                    rules: ['required']
+                }
+            };
+
+            // Validate single field
+            function validateField(fieldName) {
+                const field = fields[fieldName];
+                if (!field) return true;
+
+                const value = field.element.type === 'checkbox' ? (field.element.checked ? 'on' : '') : field
+                    .element.value.trim();
+                let isValid = true;
+                let errorMsg = '';
+
+                // Check required
+                if (field.rules.includes('required') && !value) {
+                    isValid = false;
+                    errorMsg = fieldName === 'privacy' ? 'You must agree to the Privacy Policy.' :
+                        'This field is required.';
+                }
+
+                // Email validation
+                if (field.rules.includes('email') && value) {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(value)) {
+                        isValid = false;
+                        errorMsg = 'Please enter a valid email address.';
+                    }
+                }
+
+                // Mobile validation
+                if (field.rules.includes('mobile') && value) {
+                    const mobileRegex = /^[0-9+\-\s()]{10,20}$/;
+                    if (!mobileRegex.test(value)) {
+                        isValid = false;
+                        errorMsg = 'Please enter a valid mobile number.';
+                    }
+                }
+
+                // Min length validation
+                if (field.rules.includes('min:10') && value && value.length < 10) {
+                    isValid = false;
+                    errorMsg = 'Message must be at least 10 characters.';
+                }
+
+                // Show/hide error
+                if (!isValid) {
+                    field.element.classList.add('error');
+                    field.element.classList.remove('success');
+                    field.error.textContent = errorMsg;
+                    field.error.style.display = 'block';
+                } else {
+                    field.element.classList.remove('error');
+                    if (value) {
+                        field.element.classList.add('success');
+                    } else {
+                        field.element.classList.remove('success');
+                    }
+                    field.error.style.display = 'none';
+                }
+
+                return isValid;
+            }
+
+            // Add validation listeners
+            Object.keys(fields).forEach(key => {
+                const field = fields[key];
+                const event = field.element.type === 'checkbox' ? 'change' : 'blur';
+                field.element.addEventListener(event, function() {
+                    validateField(key);
+                });
+                // Also validate on input for text fields
+                if (field.element.type !== 'checkbox') {
+                    field.element.addEventListener('input', function() {
+                        validateField(key);
+                    });
+                }
+            });
+
+            // Form submission
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
 
-                // Simulate form submission
-                const btn = form.querySelector('button[type="submit"]');
-                const originalText = btn.innerHTML;
-                btn.innerHTML = 'Sending...';
-                btn.disabled = true;
-
-                setTimeout(() => {
-                    responseDiv.style.display = 'block';
-                    btn.innerHTML = '✓ Sent Successfully';
-                    btn.style.background = '#2ecc71';
-
-                    setTimeout(() => {
-                        btn.innerHTML = originalText;
-                        btn.style.background = '#e74c3c';
-                        btn.disabled = false;
-                        form.reset();
-
-                        // Auto-hide response after 5 seconds
-                        setTimeout(() => {
-                            responseDiv.style.display = 'none';
-                        }, 5000);
-                    }, 2000);
-                }, 1500);
-            });
-
-            // File input display
-            const fileInput = document.getElementById('attachment');
-            if (fileInput) {
-                fileInput.addEventListener('change', function(e) {
-                    const fileName = this.files[0]?.name || 'No file selected';
-                    const label = document.querySelector('label[for="attachment"]');
-                    if (label) {
-                        label.textContent = fileName;
+                // Validate all fields
+                let allValid = true;
+                Object.keys(fields).forEach(key => {
+                    if (!validateField(key)) {
+                        allValid = false;
                     }
                 });
-            }
+
+                if (!allValid) {
+                    // Scroll to first error
+                    const firstError = document.querySelector('.error');
+                    if (firstError) {
+                        firstError.focus();
+                        firstError.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center'
+                        });
+                    }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Validation Error',
+                        text: 'Please fill all required fields correctly.',
+                        confirmButtonColor: '#e74c3c'
+                    });
+                    return;
+                }
+
+                // Disable button and show loading
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = `
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;">
+                        <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                    </svg>
+                    Sending...
+                `;
+
+                // Prepare form data
+                const formData = new FormData(form);
+
+                // Send AJAX request
+                fetch('{{ route('contact.store') }}', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json'
+                        },
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Success - Show SweetAlert
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Message Sent!',
+                                text: data.message,
+                                confirmButtonColor: '#2ecc71',
+                                timer: 5000,
+                                timerProgressBar: true
+                            });
+
+                            // Reset form
+                            form.reset();
+                            Object.keys(fields).forEach(key => {
+                                const field = fields[key];
+                                field.element.classList.remove('success', 'error');
+                                field.error.style.display = 'none';
+                            });
+                            charCount.textContent = '0 / 5000';
+
+                            // Reset button
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = `
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                            </svg>
+                            Send Message
+                        `;
+                        } else {
+                            // Show errors
+                            if (data.errors) {
+                                let errorMessages = '';
+                                Object.values(data.errors).forEach(error => {
+                                    errorMessages += error[0] + '\n';
+                                });
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Validation Error',
+                                    text: errorMessages,
+                                    confirmButtonColor: '#e74c3c'
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: data.message ||
+                                        'Something went wrong. Please try again.',
+                                    confirmButtonColor: '#e74c3c'
+                                });
+                            }
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = `
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                            </svg>
+                            Send Message
+                        `;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Something went wrong. Please try again later.',
+                            confirmButtonColor: '#e74c3c'
+                        });
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = `
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                        </svg>
+                        Send Message
+                    `;
+                    });
+            });
+
+            // File input validation
+            const attachmentInput = document.getElementById('attachment');
+            attachmentInput.addEventListener('change', function() {
+                const file = this.files[0];
+                const errorDiv = document.getElementById('attachmentError');
+                if (file) {
+                    const validTypes = ['image/jpeg', 'image/png', 'application/pdf', 'application/msword',
+                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+                    ];
+                    const maxSize = 5 * 1024 * 1024; // 5MB
+
+                    if (!validTypes.includes(file.type)) {
+                        errorDiv.textContent = 'File must be JPG, PNG, PDF, or DOC.';
+                        errorDiv.style.display = 'block';
+                        this.value = '';
+                    } else if (file.size > maxSize) {
+                        errorDiv.textContent = 'File size must not exceed 5MB.';
+                        errorDiv.style.display = 'block';
+                        this.value = '';
+                    } else {
+                        errorDiv.style.display = 'none';
+                    }
+                }
+            });
         });
     </script>
+
+    <style>
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
 @endpush

@@ -11,9 +11,9 @@
                     <img src="{{ asset('images/logo1.jpeg') }}" alt="Bharat Integrity Forum News">
                 </div>
                 <p class="footer-desc">
-                    Bharat Integrity Forum News delivers every major story on politics, crime,
-                    sports, and society from across the country — with truth, impartiality,
-                    and trustworthiness at its core.
+                    Bharat Integrity Forum News, powered by UMCA Online Services Pvt. Ltd., brings you accurate,
+                    impartial, and reliable news from across India with a commitment to truth, transparency, and public
+                    trust.
                 </p>
                 <div class="footer-social">
                     <a href="#" aria-label="Facebook">
@@ -52,11 +52,11 @@
             <div class="footer-col">
                 <h5>Quick Links</h5>
                 <ul>
-                    <li><a href="{{ url('/') }}">Home</a></li>
-                    <li><a href="{{ url('/about') }}">About Us</a></li>
-                    <li><a href="{{ url('/services') }}">Services</a></li>
-                    <li><a href="{{ url('/services') }}#reporter">Become a Reporter</a></li>
-                    <li><a href="{{ url('/contact') }}">Contact Us</a></li>
+                    <li><a href="{{ route('home') }}">Home</a></li>
+                    <li><a href="{{ route('about') }}">About Us</a></li>
+                    <li><a href="{{ route('services') }}">Services</a></li>
+                    <li><a href="{{ route('services') }}#reporter">Become a Reporter</a></li>
+                    <li><a href="{{ route('contact') }}">Contact Us</a></li>
                 </ul>
             </div>
 
@@ -64,10 +64,14 @@
             <div class="footer-col">
                 <h5>Policies</h5>
                 <ul>
-                    <li><a href="{{ route('privacy-policy') }}">Privacy Policy</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Our Rules</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Refund Policy</a></li>
+                    {{-- <li><a href="{{ route('privacy-policy') }}">Privacy Policy</a></li>
                     <li><a href="{{ route('our-rules') }}">Our Rules</a></li>
                     <li><a href="{{ route('terms-of-service') }}">Terms of Service</a></li>
-                    <li><a href="{{ route('refund-policy') }}">Refund Policy</a></li>
+                    <li><a href="{{ route('refund-policy') }}">Refund Policy</a></li> --}}
                 </ul>
             </div>
 
@@ -90,7 +94,7 @@
                                 d="M6.6 10.8c1.4 2.8 3.7 5 6.5 6.5l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.5.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1A17 17 0 0 1 3 4c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.2.2 2.4.6 3.5.1.4 0 .8-.2 1L6.6 10.8z" />
                         </svg>
                     </span>
-                    <p>+91 91492 61291</p>
+                    <p>+91 9250073334</p>
                 </div>
                 <div class="footer-contact-item">
                     <span class="ic">

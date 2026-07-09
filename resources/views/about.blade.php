@@ -311,35 +311,28 @@
     </section>
 
     {{-- ================= TEAM SECTION ================= --}}
-    <section id="team" style="padding: 80px 0; background: #fff;">
+    <section id="team" class="team-section">
         <div class="container">
-            <div class="section-head reveal" style="text-align: center; margin-bottom: 50px;">
-                <span class="eyebrow"
-                    style="color: #e74c3c; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; font-size: 13px;">Our
-                    Team</span>
-                <h2 style="font-size: 36px; margin: 10px 0 15px; color: #1a1a2e;">The People Behind the News</h2>
-                <p style="color: #666; max-width: 500px; margin: 0 auto; font-size: 16px;">Meet the dedicated professionals
-                    who make it all happen</p>
+            <div class="section-head reveal">
+                <span class="eyebrow eyebrow-red">Our Team</span>
+                <h2 class="section-title">The People Behind the News</h2>
+                <p class="section-sub">Meet the dedicated professionals who make it all happen</p>
             </div>
 
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px;">
+            <div class="team-grid">
 
-                <div class="reveal" style="text-align: center;">
-                    <div
-                        style="width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, #e74c3c, #c0392b); margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 40px; font-weight: 700;">
-                        AK</div>
-                    <h4 style="font-size: 18px; font-weight: 700; color: #1a1a2e; margin-bottom: 3px;">Amit Kumar</h4>
-                    <p style="font-size: 14px; color: #888; margin-bottom: 8px;">Founder & Editor-in-Chief</p>
-                    <div style="display: flex; justify-content: center; gap: 10px;">
-                        <a href="#" style="color: #888; text-decoration: none; transition: all 0.3s;"
-                            onmouseover="this.style.color='#1877f2'" onmouseout="this.style.color='#888'">
+                <div class="team-member reveal">
+                    <div class="team-avatar team-avatar--red">AK</div>
+                    <h4 class="team-name">Amit Kumar</h4>
+                    <p class="team-role">Founder &amp; Editor-in-Chief</p>
+                    <div class="team-social">
+                        <a href="#" class="social-fb" aria-label="Facebook">
                             <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
                                 <path
                                     d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                             </svg>
                         </a>
-                        <a href="#" style="color: #888; text-decoration: none; transition: all 0.3s;"
-                            onmouseover="this.style.color='#1da1f2'" onmouseout="this.style.color='#888'">
+                        <a href="#" class="social-x" aria-label="X / Twitter">
                             <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
                                 <path
                                     d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -348,22 +341,18 @@
                     </div>
                 </div>
 
-                <div class="reveal delay-1" style="text-align: center;">
-                    <div
-                        style="width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, #3498db, #2980b9); margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 40px; font-weight: 700;">
-                        PS</div>
-                    <h4 style="font-size: 18px; font-weight: 700; color: #1a1a2e; margin-bottom: 3px;">Priya Sharma</h4>
-                    <p style="font-size: 14px; color: #888; margin-bottom: 8px;">Managing Editor</p>
-                    <div style="display: flex; justify-content: center; gap: 10px;">
-                        <a href="#" style="color: #888; text-decoration: none; transition: all 0.3s;"
-                            onmouseover="this.style.color='#1877f2'" onmouseout="this.style.color='#888'">
+                <div class="team-member reveal delay-1">
+                    <div class="team-avatar team-avatar--blue">PS</div>
+                    <h4 class="team-name">Priya Sharma</h4>
+                    <p class="team-role">Managing Editor</p>
+                    <div class="team-social">
+                        <a href="#" class="social-fb" aria-label="Facebook">
                             <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
                                 <path
                                     d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                             </svg>
                         </a>
-                        <a href="#" style="color: #888; text-decoration: none; transition: all 0.3s;"
-                            onmouseover="this.style.color='#1da1f2'" onmouseout="this.style.color='#888'">
+                        <a href="#" class="social-x" aria-label="X / Twitter">
                             <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
                                 <path
                                     d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -372,22 +361,18 @@
                     </div>
                 </div>
 
-                <div class="reveal delay-2" style="text-align: center;">
-                    <div
-                        style="width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, #2ecc71, #27ae60); margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 40px; font-weight: 700;">
-                        RV</div>
-                    <h4 style="font-size: 18px; font-weight: 700; color: #1a1a2e; margin-bottom: 3px;">Rajesh Verma</h4>
-                    <p style="font-size: 14px; color: #888; margin-bottom: 8px;">Senior Reporter</p>
-                    <div style="display: flex; justify-content: center; gap: 10px;">
-                        <a href="#" style="color: #888; text-decoration: none; transition: all 0.3s;"
-                            onmouseover="this.style.color='#1877f2'" onmouseout="this.style.color='#888'">
+                <div class="team-member reveal delay-2">
+                    <div class="team-avatar team-avatar--green">RV</div>
+                    <h4 class="team-name">Rajesh Verma</h4>
+                    <p class="team-role">Senior Reporter</p>
+                    <div class="team-social">
+                        <a href="#" class="social-fb" aria-label="Facebook">
                             <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
                                 <path
                                     d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                             </svg>
                         </a>
-                        <a href="#" style="color: #888; text-decoration: none; transition: all 0.3s;"
-                            onmouseover="this.style.color='#1da1f2'" onmouseout="this.style.color='#888'">
+                        <a href="#" class="social-x" aria-label="X / Twitter">
                             <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
                                 <path
                                     d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -396,22 +381,18 @@
                     </div>
                 </div>
 
-                <div class="reveal delay-3" style="text-align: center;">
-                    <div
-                        style="width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, #f39c12, #e67e22); margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 40px; font-weight: 700;">
-                        SM</div>
-                    <h4 style="font-size: 18px; font-weight: 700; color: #1a1a2e; margin-bottom: 3px;">Sunita Mehta</h4>
-                    <p style="font-size: 14px; color: #888; margin-bottom: 8px;">Digital Media Head</p>
-                    <div style="display: flex; justify-content: center; gap: 10px;">
-                        <a href="#" style="color: #888; text-decoration: none; transition: all 0.3s;"
-                            onmouseover="this.style.color='#1877f2'" onmouseout="this.style.color='#888'">
+                <div class="team-member reveal delay-3">
+                    <div class="team-avatar team-avatar--orange">SM</div>
+                    <h4 class="team-name">Sunita Mehta</h4>
+                    <p class="team-role">Digital Media Head</p>
+                    <div class="team-social">
+                        <a href="#" class="social-fb" aria-label="Facebook">
                             <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
                                 <path
                                     d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                             </svg>
                         </a>
-                        <a href="#" style="color: #888; text-decoration: none; transition: all 0.3s;"
-                            onmouseover="this.style.color='#1da1f2'" onmouseout="this.style.color='#888'">
+                        <a href="#" class="social-x" aria-label="X / Twitter">
                             <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
                                 <path
                                     d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -421,70 +402,51 @@
                 </div>
             </div>
 
-            <div style="text-align: center; margin-top: 40px;">
-                <p style="color: #888; font-size: 14px;">And many more dedicated professionals working behind the scenes
-                </p>
-                <a href="{{ url('/contact') }}"
-                    style="color: #e74c3c; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; margin-top: 10px;">
-                    Join our team →
-                </a>
+            <div class="team-footer">
+                <p>And many more dedicated professionals working behind the scenes</p>
+                <a href="{{ url('/contact') }}" class="team-join-link">Join our team →</a>
             </div>
         </div>
     </section>
 
     {{-- ================= TIMELINE / JOURNEY ================= --}}
-    <section style="padding: 80px 0; background: #f8f9fa;">
+    <section class="timeline-section">
         <div class="container">
-            <div class="section-head reveal" style="text-align: center; margin-bottom: 50px;">
-                <span class="eyebrow"
-                    style="color: #e74c3c; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; font-size: 13px;">Our
-                    Journey</span>
-                <h2 style="font-size: 36px; margin: 10px 0 15px; color: #1a1a2e;">The Story So Far</h2>
-                <p style="color: #666; max-width: 500px; margin: 0 auto; font-size: 16px;">A timeline of our growth and
-                    milestones</p>
+            <div class="section-head reveal">
+                <span class="eyebrow eyebrow-red">Our Journey</span>
+                <h2 class="section-title">The Story So Far</h2>
+                <p class="section-sub">A timeline of our growth and milestones</p>
             </div>
 
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; position: relative;">
-                <div
-                    style="position: absolute; top: 40px; left: 15%; right: 15%; height: 3px; background: linear-gradient(to right, #e74c3c, #f39c12); z-index: 0;">
+            <div class="timeline-grid">
+                <div class="timeline-line"></div>
+
+                <div class="timeline-item reveal">
+                    <div class="timeline-num timeline-num--red">1</div>
+                    <h4 class="timeline-title">Founded</h4>
+                    <p class="timeline-date">January 2024</p>
+                    <p class="timeline-desc">Bharat Integrity Forum News was established</p>
                 </div>
 
-                <div class="reveal" style="text-align: center; position: relative; z-index: 1;">
-                    <div
-                        style="width: 60px; height: 60px; border-radius: 50%; background: #e74c3c; color: #fff; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-weight: 700; font-size: 20px;">
-                        1</div>
-                    <h4 style="font-size: 16px; font-weight: 700; color: #1a1a2e; margin-bottom: 5px;">Founded</h4>
-                    <p style="font-size: 13px; color: #888; margin: 0;">January 2024</p>
-                    <p style="font-size: 13px; color: #666; margin-top: 5px;">Bharat Integrity Forum News was established
-                    </p>
+                <div class="timeline-item reveal delay-1">
+                    <div class="timeline-num timeline-num--blue">2</div>
+                    <h4 class="timeline-title">First Reporters</h4>
+                    <p class="timeline-date">March 2024</p>
+                    <p class="timeline-desc">First batch of reporters registered</p>
                 </div>
 
-                <div class="reveal delay-1" style="text-align: center; position: relative; z-index: 1;">
-                    <div
-                        style="width: 60px; height: 60px; border-radius: 50%; background: #3498db; color: #fff; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-weight: 700; font-size: 20px;">
-                        2</div>
-                    <h4 style="font-size: 16px; font-weight: 700; color: #1a1a2e; margin-bottom: 5px;">First Reporters</h4>
-                    <p style="font-size: 13px; color: #888; margin: 0;">March 2024</p>
-                    <p style="font-size: 13px; color: #666; margin-top: 5px;">First batch of reporters registered</p>
+                <div class="timeline-item reveal delay-2">
+                    <div class="timeline-num timeline-num--green">3</div>
+                    <h4 class="timeline-title">Digital Launch</h4>
+                    <p class="timeline-date">June 2024</p>
+                    <p class="timeline-desc">Website and social media presence launched</p>
                 </div>
 
-                <div class="reveal delay-2" style="text-align: center; position: relative; z-index: 1;">
-                    <div
-                        style="width: 60px; height: 60px; border-radius: 50%; background: #2ecc71; color: #fff; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-weight: 700; font-size: 20px;">
-                        3</div>
-                    <h4 style="font-size: 16px; font-weight: 700; color: #1a1a2e; margin-bottom: 5px;">Digital Launch</h4>
-                    <p style="font-size: 13px; color: #888; margin: 0;">June 2024</p>
-                    <p style="font-size: 13px; color: #666; margin-top: 5px;">Website and social media presence launched
-                    </p>
-                </div>
-
-                <div class="reveal delay-3" style="text-align: center; position: relative; z-index: 1;">
-                    <div
-                        style="width: 60px; height: 60px; border-radius: 50%; background: #f39c12; color: #fff; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-weight: 700; font-size: 20px;">
-                        4</div>
-                    <h4 style="font-size: 16px; font-weight: 700; color: #1a1a2e; margin-bottom: 5px;">Expansion</h4>
-                    <p style="font-size: 13px; color: #888; margin: 0;">Present</p>
-                    <p style="font-size: 13px; color: #666; margin-top: 5px;">Growing network across India</p>
+                <div class="timeline-item reveal delay-3">
+                    <div class="timeline-num timeline-num--orange">4</div>
+                    <h4 class="timeline-title">Expansion</h4>
+                    <p class="timeline-date">Present</p>
+                    <p class="timeline-desc">Growing network across India</p>
                 </div>
             </div>
         </div>
@@ -555,6 +517,215 @@
             box-shadow: 0 10px 30px rgba(231, 76, 60, 0.3);
         }
 
+        /* ===== Shared section heading (used by Team & Timeline) ===== */
+        .section-head {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .eyebrow-red {
+            color: #e74c3c;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 13px;
+        }
+
+        .section-title {
+            font-size: 36px;
+            margin: 10px 0 15px;
+            color: #1a1a2e;
+        }
+
+        .section-sub {
+            color: #666;
+            max-width: 500px;
+            margin: 0 auto;
+            font-size: 16px;
+        }
+
+        /* ===================================================== */
+        /* ================   TEAM  SECTION   =================== */
+        /* ===================================================== */
+        .team-section {
+            padding: 80px 0;
+            background: #fff;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+
+        .team-member {
+            text-align: center;
+        }
+
+        .team-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 40px;
+            font-weight: 700;
+        }
+
+        .team-avatar--red {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .team-avatar--blue {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+
+        .team-avatar--green {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+        }
+
+        .team-avatar--orange {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+
+        .team-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 3px;
+        }
+
+        .team-role {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 8px;
+        }
+
+        .team-social {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .team-social a {
+            color: #888;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .team-social a.social-fb:hover {
+            color: #1877f2;
+        }
+
+        .team-social a.social-x:hover {
+            color: #1da1f2;
+        }
+
+        .team-footer {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .team-footer p {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .team-join-link {
+            color: #e74c3c;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        /* ===================================================== */
+        /* ==============   TIMELINE SECTION   ================== */
+        /* ===================================================== */
+        .timeline-section {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+
+        .timeline-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            position: relative;
+        }
+
+        .timeline-line {
+            position: absolute;
+            top: 40px;
+            left: 15%;
+            right: 15%;
+            height: 3px;
+            background: linear-gradient(to right, #e74c3c, #f39c12);
+            z-index: 0;
+        }
+
+        .timeline-item {
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .timeline-num {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        .timeline-num--red {
+            background: #e74c3c;
+        }
+
+        .timeline-num--blue {
+            background: #3498db;
+        }
+
+        .timeline-num--green {
+            background: #2ecc71;
+        }
+
+        .timeline-num--orange {
+            background: #f39c12;
+        }
+
+        .timeline-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 5px;
+        }
+
+        .timeline-date {
+            font-size: 13px;
+            color: #888;
+            margin: 0;
+        }
+
+        .timeline-desc {
+            font-size: 13px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* ===================================================== */
+        /* ==================   RESPONSIVE   ===================== */
+        /* ===================================================== */
         @media (max-width: 992px) {
             .split {
                 grid-template-columns: 1fr !important;
@@ -568,12 +739,22 @@
                 grid-template-columns: 1fr !important;
             }
 
-            .section-head h2 {
+            .section-title {
                 font-size: 28px !important;
             }
 
+            .team-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 25px;
+            }
+
+            .timeline-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 35px 25px;
+            }
+
             .timeline-line {
-                display: none !important;
+                display: none;
             }
         }
 
@@ -582,12 +763,47 @@
                 font-size: 28px !important;
             }
 
+            .section-title {
+                font-size: 24px !important;
+            }
+
+            .team-avatar {
+                width: 100px;
+                height: 100px;
+                font-size: 32px;
+            }
+        }
+
+        @media (max-width: 576px) {
             .team-grid {
-                grid-template-columns: repeat(2, 1fr) !important;
+                grid-template-columns: 1fr;
             }
 
             .timeline-grid {
-                grid-template-columns: 1fr !important;
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .team-avatar {
+                width: 90px;
+                height: 90px;
+                font-size: 28px;
+                margin-bottom: 10px;
+            }
+
+            .team-name {
+                font-size: 16px;
+            }
+
+            .timeline-num {
+                width: 50px;
+                height: 50px;
+                font-size: 18px;
+            }
+
+            .team-section,
+            .timeline-section {
+                padding: 50px 0;
             }
         }
     </style>
