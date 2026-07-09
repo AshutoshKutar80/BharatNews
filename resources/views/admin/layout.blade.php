@@ -103,7 +103,7 @@
 
                 {{-- Separate admin header — intentionally distinct from the public site header --}}
                 <header class="admin-header">
-                    <div class="tricolor-strip"></div>
+                    {{-- <div class="tricolor-strip"></div> --}}
                     <div class="admin-header-inner">
                         <div class="admin-header-left">
                             <button class="admin-burger" id="adminBurger">☰</button>
