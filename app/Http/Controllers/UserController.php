@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\State;
 use App\Models\TehsilList; // Changed to TehsilList
+use App\Models\Contact;
+use App\Models\Payment;
+use App\Models\TempPayment;
+use App\Models\PurchasedProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -177,5 +181,101 @@ class UserController extends Controller
         return response()->json([
             'tehsils' => $tehsils
         ]);
+    }
+
+    /* =====================================================
+     |  READ-ONLY PROFILE / CONTACTS / PAYMENTS / PRODUCTS
+     |  These pages only ever DISPLAY data for the logged in
+     |  user. No update/delete actions are exposed here.
+     |===================================================== */
+
+    /**
+     * Read-only profile page for the logged in user.
+     */
+    public function profile()
+    {
+        $user = Auth::user();
+
+        return view('user.profile', compact('user'));
+    }
+
+    /**
+     * List of the logged in user's own contact / support submissions.
+     */
+    public function contacts()
+    {
+        $contacts = Contact::where('user_id', Auth::id())
+            ->latest()
+            ->paginate(10);
+
+        return view('user.contacts', compact('contacts'));
+    }
+
+    /**
+     * Payment history for the logged in user, grouped by status
+     * (pending, success, failed) and merged from both the
+     * finalised `payments` table and the `temp_payments` table
+     * (for attempts that never completed).
+     */
+    public function payments()
+    {
+        $userId = Auth::id();
+
+        $payments = Payment::where('user_id', $userId)->get()->map(function ($p) {
+            $details = Payment::getProductDetails($p->product_type);
+
+            return (object) [
+                'source'       => 'payment',
+                'product_type' => $p->product_type,
+                'product_name' => $details['name'] ?? $p->product_type,
+                'amount'       => $p->amount,
+                'txn_ref'      => $p->txn_ref,
+                'order_id'     => $p->order_id,
+                'status'       => $p->status,
+                'date'         => $p->paid_at ?? $p->created_at,
+            ];
+        });
+
+        $tempPayments = TempPayment::where('user_id', $userId)->get()->map(function ($t) {
+            $details = Payment::getProductDetails($t->product_type);
+
+            return (object) [
+                'source'       => 'temp_payment',
+                'product_type' => $t->product_type,
+                'product_name' => $details['name'] ?? $t->product_type,
+                'amount'       => $t->amount,
+                'txn_ref'      => $t->txn_ref,
+                'order_id'     => $t->order_id,
+                'status'       => $t->status,
+                'date'         => $t->created_at,
+            ];
+        });
+
+        $allPayments = $payments->merge($tempPayments)->sortByDesc('date')->values();
+
+        $pendingStatuses = ['pending', 'initiated', 'processing'];
+        $failedStatuses  = ['failed', 'expired'];
+
+        $pending = $allPayments->whereIn('status', $pendingStatuses)->values();
+        $success = $allPayments->where('status', 'success')->values();
+        $failed  = $allPayments->whereIn('status', $failedStatuses)->values();
+
+        return view('user.payments', compact('allPayments', 'pending', 'success', 'failed'));
+    }
+
+    /**
+     * Purchased / approved products for the logged in user.
+     */
+    public function products()
+    {
+        $products = PurchasedProduct::where('user_id', Auth::id())
+            ->latest()
+            ->get()
+            ->map(function ($product) {
+                $product->details = Payment::getProductDetails($product->product_type);
+                return $product;
+            });
+
+        return view('user.products', compact('products'));
     }
 }

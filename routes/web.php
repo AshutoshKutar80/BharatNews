@@ -53,6 +53,11 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/payment/failed', [PaymentController::class, 'failed'])->name('payment.failed');
     Route::get('/payment/status/{order_id}', [PaymentController::class, 'checkStatus'])->name('payment.status');
 
+    Route::get('/profile', [UserController::class, 'profile'])->name('profile');
+    Route::get('/my-contacts', [UserController::class, 'contacts'])->name('user.contacts');
+    Route::get('/my-payments', [UserController::class, 'payments'])->name('user.payments');
+    Route::get('/my-products', [UserController::class, 'products'])->name('user.products');
+
     // tickets
     Route::get('/support', [TicketController::class, 'index'])->name('ticket.index');
     Route::post('/support/store', [TicketController::class, 'store'])->name('ticket.store');
@@ -108,4 +113,8 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('/ticket/messages/{id}', [TicketController::class, 'ticketMessages'])->name('ticket.messages');
         Route::post('/tickets/reply/{id}', [TicketController::class, 'ticketReply'])->name('ticket.reply');
         Route::post('/tickets/reply-close/{id}', [TicketController::class, 'ticketReplyClose'])->name('ticket.reply.close');
+
+        //logout
+        Route::post('/logout', [UserController::class, 'logout'])->name('logout');
+
     });

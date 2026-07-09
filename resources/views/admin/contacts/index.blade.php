@@ -6,6 +6,16 @@
 
 @section('content')
     <style>
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         /* Tab Navigation */
         .tab-nav {
             display: flex;
@@ -16,7 +26,10 @@
             border-radius: 12px;
             border: 1px solid #e2e8f0;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-            flex-wrap: wrap;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            min-width: 0;
         }
 
         .tab-nav a {
@@ -30,6 +43,8 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .tab-nav a:hover {
@@ -64,6 +79,7 @@
             margin-bottom: 32px;
             overflow: hidden;
             border: 1px solid #e2e8f0;
+            max-width: 100%;
         }
 
         .panel-head {
@@ -327,6 +343,152 @@
             color: #64748b;
             font-size: 13px;
         }
+
+        /* ============================================================
+               TABLET  (577px – 991px)
+               ============================================================ */
+        @media (min-width: 577px) and (max-width: 991px) {
+            .admin-table {
+                font-size: 13px;
+            }
+
+            .admin-table th,
+            .admin-table td {
+                padding: 10px 8px;
+            }
+
+            .subject-preview,
+            .message-preview {
+                max-width: 140px;
+            }
+
+            .panel-head {
+                padding: 16px;
+            }
+        }
+
+        /* ============================================================
+               LAPTOP  (992px – 1199px)
+               ============================================================ */
+        @media (min-width: 992px) and (max-width: 1199px) {
+            .admin-table {
+                font-size: 13.5px;
+            }
+
+            .subject-preview,
+            .message-preview {
+                max-width: 180px;
+            }
+        }
+
+        /* ============================================================
+               DESKTOP  (≥ 1200px) — default styles already good
+               ============================================================ */
+
+        /* ============================================================
+               MOBILE  (≤ 576px) — cards
+               ============================================================ */
+        @media (max-width: 576px) {
+            .tab-nav {
+                padding: 6px;
+                gap: 4px;
+            }
+
+            .tab-nav a {
+                padding: 8px 14px;
+                font-size: 13px;
+            }
+
+            .panel-head {
+                padding: 14px;
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .admin-table thead {
+                display: none;
+            }
+
+            .admin-table,
+            .admin-table tbody,
+            .admin-table tr,
+            .admin-table td {
+                display: block;
+                width: 100%;
+            }
+
+            .admin-table tr {
+                margin-bottom: 14px;
+                border: 1px solid #e2e8f0;
+                border-radius: 10px;
+                padding: 12px;
+            }
+
+            .admin-table tr.unread {
+                border-left: 4px solid #f59e0b;
+            }
+
+            .admin-table td {
+                padding: 8px 0;
+                border: none;
+                text-align: left;
+            }
+
+            .admin-table td::before {
+                content: attr(data-label);
+                display: block;
+                font-weight: 600;
+                font-size: 11px;
+                text-transform: uppercase;
+                letter-spacing: 0.03em;
+                color: #94a3b8;
+                margin-bottom: 4px;
+            }
+
+            .checkbox-column {
+                width: auto;
+                text-align: left;
+                display: flex !important;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .checkbox-column::before {
+                content: "Select" !important;
+                margin-bottom: 0 !important;
+            }
+
+            .subject-preview,
+            .message-preview {
+                max-width: 100%;
+                white-space: normal;
+            }
+
+            .row-actions {
+                border-top: 1px dashed #e2e8f0;
+                padding-top: 10px;
+                margin-top: 4px;
+            }
+
+            .row-actions .btn-sm {
+                flex: 1;
+                justify-content: center;
+            }
+
+            .bulk-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .bulk-actions select {
+                width: 100%;
+            }
+
+            #selectedCount {
+                margin-left: 0 !important;
+                text-align: center;
+            }
+        }
     </style>
 
     {{-- Tab Navigation --}}
@@ -384,22 +546,22 @@
                                         <input type="checkbox" name="ids[]" value="{{ $contact->id }}"
                                             class="contact-checkbox">
                                     </td>
-                                    <td>
+                                    <td data-label="User">
                                         <div class="cell-name">{{ $contact->name }}</div>
                                         <div class="cell-sub">{{ $contact->email }}</div>
                                         <div class="cell-sub" style="margin-top: 2px;">📱 {{ $contact->mobile }}</div>
                                     </td>
-                                    <td>
+                                    <td data-label="Subject">
                                         <span class="subject-preview" title="{{ $contact->subject }}">
                                             {{ ucfirst(str_replace('-', ' ', $contact->subject)) }}
                                         </span>
                                     </td>
-                                    <td>
+                                    <td data-label="Message">
                                         <span class="message-preview" title="{{ $contact->message }}">
                                             {{ Str::limit($contact->message, 60) }}
                                         </span>
                                     </td>
-                                    <td>
+                                    <td data-label="Status">
                                         <span class="badge-status {{ $contact->status }}">
                                             {{ ucfirst($contact->status) }}
                                         </span>
@@ -409,10 +571,10 @@
                                             </div>
                                         @endif
                                     </td>
-                                    <td style="font-size: 13px; color: #64748b;">
+                                    <td data-label="Received" style="font-size: 13px; color: #64748b;">
                                         {{ $contact->created_at->format('d M Y, h:i A') }}
                                     </td>
-                                    <td>
+                                    <td data-label="Actions">
                                         <div class="row-actions">
                                             <a href="{{ route('admin.contacts.show', $contact->id) }}"
                                                 class="btn-sm btn-view">
@@ -463,7 +625,6 @@
     @push('scripts')
         <script>
             document.addEventListener('DOMContentLoaded', function() {
-                // Select All checkbox
                 const selectAll = document.getElementById('selectAll');
                 const checkboxes = document.querySelectorAll('.contact-checkbox');
                 const selectedCount = document.getElementById('selectedCount');
@@ -486,7 +647,6 @@
                     }
                 }
 
-                // Confirm dialogs
                 document.querySelectorAll('form[data-confirm]').forEach(form => {
                     form.addEventListener('submit', function(e) {
                         const message = this.getAttribute('data-confirm');

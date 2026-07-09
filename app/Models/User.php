@@ -56,4 +56,29 @@ class User extends Authenticatable
             'updated_at'  => 'datetime',
         ];
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function contacts()
+    {
+        return $this->hasMany(\App\Models\Contact::class);
+    }
+    
+    public function payments()
+    {
+        return $this->hasMany(\App\Models\Payment::class);
+    }
+    
+    public function tempPayments()
+    {
+        return $this->hasMany(\App\Models\TempPayment::class);
+    }
+    
+    public function purchasedProducts()
+    {
+        return $this->hasMany(\App\Models\PurchasedProduct::class);
+    }
 }

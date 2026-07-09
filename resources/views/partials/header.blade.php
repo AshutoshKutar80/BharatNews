@@ -34,26 +34,38 @@
                         </a>
                         <div class="nav-dropdown-menu" aria-labelledby="userDropdown">
                             <a href="{{ route('dashboard') }}" class="{{ request()->is('dashboard') ? 'active' : '' }}">
-                                <i class="fas fa-tachometer-alt"></i> Dashboard
+                                Dashboard
                             </a>
                             <div class="dropdown-divider"></div>
-                            <a href="#" class="sidebar-nav-settings">
-                                <i class="fas fa-cog"></i> Settings
+                            <a href="{{ route('profile') }}" class="{{ request()->is('profile') ? 'active' : '' }}">
+                                Activity
+                            </a>
+                            {{-- <div class="dropdown-divider"></div>
+                            <a href="{{ route('user.contacts') }}"
+                                class="{{ request()->is('my-contacts') ? 'active' : '' }}">
+                                Contacts
                             </a>
                             <div class="dropdown-divider"></div>
-                            <a href="#" class="sidebar-nav-profile">
-                                <i class="fas fa-user"></i> Profile
+                            <a href="{{ route('user.payments') }}"
+                                class="{{ request()->is('my-payments') ? 'active' : '' }}">
+                                Payments
                             </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="{{ route('user.products') }}"
+                                class="{{ request()->is('my-products') ? 'active' : '' }}">
+                                Products
+                            </a> --}}
                             <div class="dropdown-divider"></div>
                             <a href="{{ route('ticket.index') }}"
                                 class="{{ request()->is('ticket.index') ? 'active' : '' }}">
-                                <i class="fas fa-ticket-alt"></i> Support
+                                Support
                             </a>
+
                             <div class="dropdown-divider"></div>
                             <a href="{{ route('logout') }}"
                                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                                 class="text-danger">
-                                <i class="fas fa-sign-out-alt"></i> Logout
+                                Logout
                             </a>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                 @csrf
@@ -93,14 +105,20 @@
                     class="sidebar-nav-dashboard {{ request()->is('dashboard') ? 'active' : '' }}">
                     <i class="fas fa-tachometer-alt"></i> Dashboard
                 </a>
-                <a href="#" class="sidebar-nav-settings">
-                    <i class="fas fa-cog"></i> Settings
-                </a>
-                <a href="#" class="sidebar-nav-profile">
+                <a href="{{ route('profile') }}" class="{{ request()->is('profile') ? 'active' : '' }}">
                     <i class="fas fa-user"></i> Profile
                 </a>
-                <a href="/support" class="{{ request()->is('support') ? 'active' : '' }}">
-                    <i class="fas fa-ticket-alt"></i> Support
+                <a href="{{ route('user.contacts') }}" class="{{ request()->is('my-contacts') ? 'active' : '' }}">
+                    <i class="fas fa-envelope-open-text"></i> Contacts
+                </a>
+                <a href="{{ route('user.payments') }}" class="{{ request()->is('my-payments') ? 'active' : '' }}">
+                    <i class="fas fa-credit-card"></i> Payments
+                </a>
+                <a href="{{ route('user.products') }}" class="{{ request()->is('my-products') ? 'active' : '' }}">
+                    <i class="fas fa-box-open"></i> Products
+                </a>
+                <a href="{{ route('ticket.index') }}" class="{{ request()->routeIs('ticket.index') ? 'active' : '' }}">
+                    <i class="fa-solid fa-ticket"></i> Support
                 </a>
                 <a href="{{ route('logout') }}"
                     onclick="event.preventDefault(); document.getElementById('logout-form-mobile').submit();"

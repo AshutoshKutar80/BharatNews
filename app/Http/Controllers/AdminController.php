@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use App\Mail\ProductApprovedMail;
+use Illuminate\Support\Facades\Mail;
 
 class AdminController extends Controller
 {
@@ -245,6 +247,7 @@ class AdminController extends Controller
     public function purchasedProducts(Request $request)
     {
         $status = $request->query('status', 'all');
+        $search = $request->query('search');
 
         $query = PurchasedProduct::with('user')->latest();
 
@@ -254,9 +257,23 @@ class AdminController extends Controller
             $query->where('is_approved', true);
         }
 
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('product_name', 'like', "%{$search}%")
+                ->orWhere('product_type', 'like', "%{$search}%")
+                ->orWhere('txn_ref', 'like', "%{$search}%")
+                ->orWhere('tracking_id', 'like', "%{$search}%")
+                ->orWhereHas('user', function ($uq) use ($search) {
+                    $uq->where('name', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%")
+                        ->orWhere('mobile', 'like', "%{$search}%");
+                });
+            });
+        }
+
         $products = $query->paginate(5)->withQueryString();
 
-        return view('admin.purchased-products.index', compact('products', 'status'));
+        return view('admin.purchased-products.index', compact('products', 'status', 'search'));
     }
 
     public function approvePurchasedProduct(Request $request, $id)
@@ -280,6 +297,33 @@ class AdminController extends Controller
         $product->approved_at = now();
         $product->approved_by = Auth::id();
         $product->save();
+
+        // Send email notification
+        try {
+            // Assuming the product has a user relationship
+            // If you have a user_id field in PurchasedProduct
+            if ($product->user && $product->user->email) {
+                Mail::to($product->user->email)->send(new ProductApprovedMail($product));
+                
+                Log::info('Product approval email sent', [
+                    'purchased_product_id' => $product->id,
+                    'email' => $product->user->email,
+                    'tracking_id' => $product->tracking_id,
+                ]);
+            } else {
+                // If no user relationship, you might want to send to a default email
+                // or log a warning
+                Log::warning('No email found for product approval notification', [
+                    'purchased_product_id' => $product->id
+                ]);
+            }
+        } catch (\Exception $e) {
+            Log::error('Failed to send product approval email', [
+                'purchased_product_id' => $product->id,
+                'error' => $e->getMessage()
+            ]);
+            // Continue with the process even if email fails
+        }
 
         Log::info('Admin approved purchased product', [
             'purchased_product_id' => $product->id,
