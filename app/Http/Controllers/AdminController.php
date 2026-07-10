@@ -185,11 +185,7 @@ class AdminController extends Controller
         return redirect()->route('admin.users')->with('success', "User '{$user->name}' updated successfully.");
     }
 
-    /**
-     * ==========================================================
-     *  PAYMENTS  (temp_payments + payments)
-     * ==========================================================
-     */
+    // temp_payments
     public function payments(Request $request)
     {
         $tab = $request->query('tab', 'pending');
@@ -210,6 +206,7 @@ class AdminController extends Controller
         return view('admin.payments.index', compact('tempPayments', 'tab', 'search'));
     }
 
+    //success_payment
     public function successPayments(Request $request)
     {
         $search = $request->query('search');
@@ -230,7 +227,6 @@ class AdminController extends Controller
 
         return view('admin.payments.success', compact('successPayments', 'search'));
     }
-
 
     public function approveTempPayment($id)
     {

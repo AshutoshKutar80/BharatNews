@@ -26,9 +26,7 @@ class PaymentController extends Controller
             : 'https://sandbox.cashfree.com/pg';
     }
 
-    // ============================================
-    // STEP 1: User payment start karta hai
-    // ============================================
+
     public function initiate(Request $request)
     {
         if (!Auth::check()) {
@@ -48,7 +46,6 @@ class PaymentController extends Controller
         $productName = $productDetails['name'] ?? ucwords(str_replace('_', ' ', $productType));
         $txnRef = 'TX_' . time() . '_' . Str::random(8);
 
-        // Pehle temp_payments mein "pending" entry bana do
         $tempPayment = TempPayment::create([
             'user_id' => $user->id,
             'user_name' => $user->name,
@@ -83,14 +80,20 @@ class PaymentController extends Controller
         $data = $response->json();
 
         if ($response->failed()) {
-            $tempPayment->update(['status' => 'failed']);
+            $tempPayment->update([
+                'status' => 'failed',
+                'raw_response' => $data,
+            ]);
             return response()->json([
                 'success' => false,
                 'message' => $data['message'] ?? 'Payment failed to start',
             ], 500);
         }
 
-        $tempPayment->update(['order_id' => $data['order_id'] ?? $txnRef]);
+        $tempPayment->update([
+            'order_id' => $data['order_id'] ?? $txnRef,
+            'raw_response' => $data,
+        ]);
 
         return response()->json([
             'success' => true,
@@ -114,19 +117,24 @@ class PaymentController extends Controller
                 : redirect()->route('services')->with('error', 'Payment not found');
         }
 
-        // Cashfree se asli status poocho (kabhi bhi sirf redirect par bharosa mat karo)
-        $status = $this->getGatewayStatus($tempPayment->order_id);
+        $gateway = $this->getGatewayStatus($tempPayment->order_id);
 
-        if ($status === 'PAID') {
-            $this->markSuccess($tempPayment);
+        if ($gateway && $gateway['status'] === 'PAID') {
+            $this->markSuccess($tempPayment, $gateway['raw']);
             return redirect()->route('payment.success', ['order_id' => $orderId]);
         }
 
-        if ($status === 'FAILED') {
-            $tempPayment->update(['status' => 'failed']);
+        if ($gateway && $gateway['status'] === 'FAILED') {
+            $tempPayment->update([
+                'status' => 'failed',
+                'raw_response' => $gateway['raw'],
+            ]);
+        } elseif ($gateway) {
+            $tempPayment->update([
+                'raw_response' => $gateway['raw'],
+            ]);
         }
 
-        // Abhi bhi pending ho sakta hai
         return redirect()->route('payment.failed', ['order_id' => $orderId]);
     }
 
@@ -149,24 +157,20 @@ class PaymentController extends Controller
             return null;
         }
 
-        $status = strtoupper($latest['payment_status']);
+        $rawStatus = strtoupper($latest['payment_status']);
 
-        if (in_array($status, ['SUCCESS', 'PAID'])) {
-            return 'PAID';
+        if (in_array($rawStatus, ['SUCCESS', 'PAID'])) {
+            $status = 'PAID';
+        } elseif (in_array($rawStatus, ['FAILED', 'CANCELLED'])) {
+            $status = 'FAILED';
+        } else {
+            $status = 'PENDING';
         }
 
-        if (in_array($status, ['FAILED', 'CANCELLED'])) {
-            return 'FAILED';
-        }
-
-        return 'PENDING';
+        return ['status' => $status, 'raw' => $latest];
     }
 
-    // ============================================
-    // Helper 2: Payment ko success mark karna
-    // (permanent record banata hai, temp wala delete karta hai)
-    // ============================================
-    private function markSuccess($tempPayment)
+    private function markSuccess($tempPayment, $gatewayResponse = null)
     {
         $alreadyExists = Payment::where('txn_ref', $tempPayment->txn_ref)->exists();
 
@@ -181,6 +185,7 @@ class PaymentController extends Controller
                 'order_id' => $tempPayment->order_id,
                 'status' => 'success',
                 'paid_at' => now(),
+                'raw_response' => $gatewayResponse,
             ]);
 
             $productDetails = Payment::getProductDetails($tempPayment->product_type);
@@ -200,22 +205,27 @@ class PaymentController extends Controller
         $tempPayment->delete();
     }
 
+
     public function adminApprove(TempPayment $tempPayment)
     {
-        $status = $this->getGatewayStatus($tempPayment->order_id);
+        $gateway = $this->getGatewayStatus($tempPayment->order_id);
 
-        if ($status !== 'PAID') {
+        if (!$gateway || $gateway['status'] !== 'PAID') {
+            if ($gateway) {
+                $tempPayment->update(['raw_response' => $gateway['raw']]);
+            }
+
             return [
                 'success' => false,
-                'message' => "Gateway not confirm  (status: " . ($status ?? 'unknown') . "). Not Approved .",
+                'message' => "Gateway ne confirm nahi kiya (status: " . ($gateway['status'] ?? 'unknown') . "). Approve nahi hua.",
             ];
         }
 
-        $this->markSuccess($tempPayment);
+        $this->markSuccess($tempPayment, $gateway['raw']);
 
         return [
             'success' => true,
-            'message' => 'Gateway Confirm, Payment Approve.',
+            'message' => 'Gateway ne confirm kiya, payment approve ho gaya.',
         ];
     }
 
