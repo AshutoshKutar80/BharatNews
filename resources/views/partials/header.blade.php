@@ -38,7 +38,7 @@
                             </a>
                             <div class="dropdown-divider"></div>
                             <a href="{{ route('profile') }}" class="{{ request()->is('profile') ? 'active' : '' }}">
-                                Activity
+                                More Details
                             </a>
                             {{-- <div class="dropdown-divider"></div>
                             <a href="{{ route('user.contacts') }}"

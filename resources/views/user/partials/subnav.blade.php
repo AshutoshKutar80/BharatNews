@@ -1,8 +1,8 @@
 {{-- resources/views/user/partials/subnav.blade.php --}}
 <div class="up-subnav">
-    <a href="{{ route('dashboard') }}" class="up-subnav-item {{ $active === 'dashboard' ? 'active' : '' }}">
+    {{-- <a href="{{ route('dashboard') }}" class="up-subnav-item {{ $active === 'dashboard' ? 'active' : '' }}">
         <i class="fas fa-tachometer-alt"></i> Dashboard
-    </a>
+    </a> --}}
     <a href="{{ route('profile') }}" class="up-subnav-item {{ $active === 'profile' ? 'active' : '' }}">
         <i class="fas fa-user"></i> Profile
     </a>

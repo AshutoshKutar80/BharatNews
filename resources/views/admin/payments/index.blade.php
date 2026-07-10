@@ -189,6 +189,56 @@
             margin-bottom: 12px;
         }
 
+        /* Search box */
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-box input[type="text"] {
+            padding: 8px 14px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            min-width: 240px;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .search-box input[type="text"]:focus {
+            border-color: #0f172a;
+        }
+
+        .search-box .btn-search {
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: none;
+            background: #0f172a;
+            color: white;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .search-box .btn-search:hover {
+            background: #1e293b;
+        }
+
+        .search-box .btn-clear {
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            color: #64748b;
+            font-size: 13px;
+            text-decoration: none;
+        }
+
+        .search-box .btn-clear:hover {
+            background: #f1f5f9;
+        }
+
         /* Pagination */
         .pagination-wrap {
             padding: 16px 24px;
@@ -256,6 +306,15 @@
                 font-size: 13px;
                 padding: 0 10px;
             }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .search-box input[type="text"] {
+                min-width: 0;
+                flex: 1;
+            }
         }
     </style>
 
@@ -265,13 +324,28 @@
     <div class="panel">
         <div class="panel-head">
             <h3>⏳ Pending / Temp Payments</h3>
+
+            <form method="GET" action="{{ route('admin.payments') }}" class="search-box">
+                <input type="hidden" name="tab" value="{{ $tab }}">
+                <input type="text" name="search" value="{{ $search }}"
+                    placeholder="Search name, email, txn ref, product...">
+                <button type="submit" class="btn-search">🔍 Search</button>
+                @if ($search)
+                    <a href="{{ route('admin.payments', ['tab' => $tab]) }}" class="btn-clear">✕ Clear</a>
+                @endif
+            </form>
+
             <span class="badge-status pending">{{ $tempPayments->total() }} total</span>
         </div>
         <div class="panel-body">
             @if ($tempPayments->isEmpty())
                 <div class="empty-state">
                     <div class="ic">💳</div>
-                    No pending payments.
+                    @if ($search)
+                        No pending payments found for "{{ $search }}".
+                    @else
+                        No pending payments.
+                    @endif
                 </div>
             @else
                 <table class="admin-table">
@@ -323,7 +397,7 @@
         </div>
         @if ($tempPayments->hasPages())
             <div class="pagination-wrap">
-                {{ $tempPayments->appends(['tab' => 'pending'])->links('pagination::bootstrap-5') }}
+                {{ $tempPayments->appends(['tab' => 'pending', 'search' => $search])->links('pagination::bootstrap-5') }}
             </div>
         @endif
     </div>

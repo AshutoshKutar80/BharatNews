@@ -1569,7 +1569,7 @@
             }
 
             // Handle payment return page
-            if (window.location.pathname.includes('/payment/return')) {
+            if (window.location.pathname.includes('/payment/callback')) {
                 const urlParams = new URLSearchParams(window.location.search);
                 const orderId = urlParams.get('order_id');
 

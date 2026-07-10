@@ -193,40 +193,57 @@ class AdminController extends Controller
     public function payments(Request $request)
     {
         $tab = $request->query('tab', 'pending');
+        $search = $request->query('search');
 
-        $tempPayments = TempPayment::latest()->paginate(5, ['*'], 'temp_page');
-        // dd($tempPayments);
+        $tempPayments = TempPayment::when($search, function ($query, $search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('user_name', 'like', "%{$search}%")
+                    ->orWhere('user_email', 'like', "%{$search}%")
+                    ->orWhere('txn_ref', 'like', "%{$search}%")
+                    ->orWhere('product_type', 'like', "%{$search}%");
+            });
+        })
+            ->latest()
+            ->paginate(5, ['*'], 'temp_page')
+            ->appends(['search' => $search, 'tab' => $tab]);
 
-
-        return view('admin.payments.index', compact('tempPayments', 'tab'));
+        return view('admin.payments.index', compact('tempPayments', 'tab', 'search'));
     }
 
-    public function successPayments()
+    public function successPayments(Request $request)
     {
-        $successPayments = Payment::where('status', 'success')->latest()->paginate(5, ['*'], 'success_page');
-        return view('admin.payments.success', compact('successPayments'));
+        $search = $request->query('search');
+
+        $successPayments = Payment::where('status', 'success')
+            ->when($search, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('user_name', 'like', "%{$search}%")
+                        ->orWhere('user_email', 'like', "%{$search}%")
+                        ->orWhere('txn_ref', 'like', "%{$search}%")
+                        ->orWhere('order_id', 'like', "%{$search}%")
+                        ->orWhere('product_type', 'like', "%{$search}%");
+                });
+            })
+            ->latest()
+            ->paginate(5, ['*'], 'success_page')
+            ->appends(['search' => $search]);
+
+        return view('admin.payments.success', compact('successPayments', 'search'));
     }
 
-    /**
-     * Approve a pending/initiated temp payment: moves it into the
-     * permanent `payments` table (and creates the matching
-     * purchased_products row) using the exact same logic the payment
-     * gateway webhook uses, then removes it from temp_payments.
-     */
+
     public function approveTempPayment($id)
     {
         $tempPayment = TempPayment::findOrFail($id);
 
         $paymentController = new PaymentController();
-        $paymentController->adminApprove($tempPayment);
+        $result = $paymentController->adminApprove($tempPayment);
 
-        Log::info('Admin manually approved temp payment', [
-            'txn_ref' => $tempPayment->txn_ref,
-            'admin_id' => Auth::id(),
-        ]);
-
-        return back()->with('success', "Payment '{$tempPayment->txn_ref}' approved and moved to successful payments.");
+        return $result['success']
+            ? back()->with('success', $result['message'])
+            : back()->with('error', $result['message']);
     }
+
 
     public function deleteTempPayment($id)
     {
@@ -260,14 +277,14 @@ class AdminController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('product_name', 'like', "%{$search}%")
-                ->orWhere('product_type', 'like', "%{$search}%")
-                ->orWhere('txn_ref', 'like', "%{$search}%")
-                ->orWhere('tracking_id', 'like', "%{$search}%")
-                ->orWhereHas('user', function ($uq) use ($search) {
-                    $uq->where('name', 'like', "%{$search}%")
-                        ->orWhere('email', 'like', "%{$search}%")
-                        ->orWhere('mobile', 'like', "%{$search}%");
-                });
+                    ->orWhere('product_type', 'like', "%{$search}%")
+                    ->orWhere('txn_ref', 'like', "%{$search}%")
+                    ->orWhere('tracking_id', 'like', "%{$search}%")
+                    ->orWhereHas('user', function ($uq) use ($search) {
+                        $uq->where('name', 'like', "%{$search}%")
+                            ->orWhere('email', 'like', "%{$search}%")
+                            ->orWhere('mobile', 'like', "%{$search}%");
+                    });
             });
         }
 
@@ -304,7 +321,7 @@ class AdminController extends Controller
             // If you have a user_id field in PurchasedProduct
             if ($product->user && $product->user->email) {
                 Mail::to($product->user->email)->send(new ProductApprovedMail($product));
-                
+
                 Log::info('Product approval email sent', [
                     'purchased_product_id' => $product->id,
                     'email' => $product->user->email,

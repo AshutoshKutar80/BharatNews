@@ -64,14 +64,14 @@
             <div class="footer-col">
                 <h5>Policies</h5>
                 <ul>
-                    <li><a href="#">Privacy Policy</a></li>
+                    {{-- <li><a href="#">Privacy Policy</a></li>
                     <li><a href="#">Our Rules</a></li>
                     <li><a href="#">Terms of Service</a></li>
-                    <li><a href="#">Refund Policy</a></li>
-                    {{-- <li><a href="{{ route('privacy-policy') }}">Privacy Policy</a></li>
+                    <li><a href="#">Refund Policy</a></li> --}}
+                    <li><a href="{{ route('privacy-policy') }}">Privacy Policy</a></li>
                     <li><a href="{{ route('our-rules') }}">Our Rules</a></li>
                     <li><a href="{{ route('terms-of-service') }}">Terms of Service</a></li>
-                    <li><a href="{{ route('refund-policy') }}">Refund Policy</a></li> --}}
+                    <li><a href="{{ route('refund-policy') }}">Refund Policy</a></li>
                 </ul>
             </div>
 

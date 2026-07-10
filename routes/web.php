@@ -38,7 +38,6 @@ Route::get('/get-tehsils/{district}', [UserController::class, 'getTehsils']);
 
 Route::get('/login', [UserController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [UserController::class, 'login'])->name('login.store');
-Route::post('/payment/initiate', [PaymentController::class, 'initiate'])->name('payment.initiate');
 
 
 // ============================================
@@ -47,11 +46,12 @@ Route::post('/payment/initiate', [PaymentController::class, 'initiate'])->name('
 Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
     Route::post('/logout', [UserController::class, 'logout'])->name('logout');
-    // Route::post('/payment/initiate', [PaymentController::class, 'initiate'])->name('payment.initiate');
-    Route::get('/payment/return', [PaymentController::class, 'handleReturn'])->name('payment.return');
+
+    // Payment - sirf 2 core routes: callback (Cashfree redirect yahin aata hai) + status pages
+    Route::post('/payment/initiate', [PaymentController::class, 'initiate'])->name('payment.initiate');
+    Route::get('/payment/callback', [PaymentController::class, 'callback'])->name('payment.callback');
     Route::get('/payment/success', [PaymentController::class, 'success'])->name('payment.success');
     Route::get('/payment/failed', [PaymentController::class, 'failed'])->name('payment.failed');
-    Route::get('/payment/status/{order_id}', [PaymentController::class, 'checkStatus'])->name('payment.status');
 
     Route::get('/profile', [UserController::class, 'profile'])->name('profile');
     Route::get('/my-contacts', [UserController::class, 'contacts'])->name('user.contacts');
@@ -65,8 +65,6 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/support/show/{id}', [TicketController::class, 'show'])->name('ticket.show');
     Route::get('/support/latest-messages/{ticket}', [TicketController::class, 'latestMessages']);
 });
-
-Route::post('/payment/webhook', [PaymentController::class, 'webhook'])->name('payment.webhook');
 
 
 // ============================================
@@ -97,7 +95,8 @@ Route::middleware(['auth', 'role:admin'])
         // Purchased products
         Route::get('/purchased-products', [AdminController::class, 'purchasedProducts'])->name('purchased-products');
         Route::post('/purchased-products/{id}/approve', [AdminController::class, 'approvePurchasedProduct'])->name('purchased-products.approve');
-        //contact
+
+        // contact
         Route::get('/contacts', [AdminContactController::class, 'index'])->name('contacts.index');
         Route::get('/contacts/pending', [AdminContactController::class, 'pending'])->name('contacts.pending');
         Route::get('/contacts/replied', [AdminContactController::class, 'replied'])->name('contacts.replied');
@@ -107,15 +106,13 @@ Route::middleware(['auth', 'role:admin'])
         Route::post('/contacts/bulk-delete', [AdminContactController::class, 'bulkDelete'])->name('contacts.bulk-delete');
         Route::post('/contacts/{id}/mark-read', [AdminContactController::class, 'markAsRead'])->name('contacts.mark-read');
         Route::get('/contacts/export', [AdminContactController::class, 'export'])->name('contacts.export');
-        Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
-
-        // Tickets 
+        // Tickets
         Route::get('/tickets', [TicketController::class, 'tickets'])->name('tickets');
         Route::get('/ticket/messages/{id}', [TicketController::class, 'ticketMessages'])->name('ticket.messages');
         Route::post('/tickets/reply/{id}', [TicketController::class, 'ticketReply'])->name('ticket.reply');
         Route::post('/tickets/reply-close/{id}', [TicketController::class, 'ticketReplyClose'])->name('ticket.reply.close');
 
-        //logout
+        // logout
         Route::post('/logout', [UserController::class, 'logout'])->name('logout');
     });

@@ -283,13 +283,14 @@ h4 {
   top: 100%;
   left: 0;
   background: var(--white);
-  min-width: 120px;
+  min-width: 180px;
   border-radius: var(--radius);
   padding: 0.5rem 0;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
   border: 1px solid rgba(11, 31, 77, 0.08);
   z-index: 1000;
   margin-top: 4px;
+  padding: 0px 20px;
 }
 
 .nav-dropdown-menu a {
@@ -1903,6 +1904,18 @@ section {
   font-size: 14px;
   font-weight: 500;
   transition: all 0.3s ease;
+}
+.mobile-sidebar .sidebar-nav a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  /* Icon aur text ke beech spacing */
+}
+
+.mobile-sidebar .sidebar-nav a i {
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
 }
 
 .sidebar-nav-dashboard:hover,

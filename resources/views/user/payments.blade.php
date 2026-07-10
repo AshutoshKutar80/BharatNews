@@ -62,7 +62,7 @@
                                             <th>Product</th>
                                             <th>Amount</th>
                                             <th>Txn Ref</th>
-                                            <th>Order ID</th>
+                                            {{-- <th>Order ID</th> --}}
                                             <th>Status</th>
                                             <th>Date</th>
                                         </tr>
@@ -81,7 +81,7 @@
                                                 <td data-label="Product">{{ $row->product_name }}</td>
                                                 <td data-label="Amount">₹{{ number_format((float) $row->amount, 2) }}</td>
                                                 <td data-label="Txn Ref">{{ $row->txn_ref ?? '—' }}</td>
-                                                <td data-label="Order ID">{{ $row->order_id ?? '—' }}</td>
+                                                {{-- <td data-label="Order ID">{{ $row->order_id ?? '—' }}</td> --}}
                                                 <td data-label="Status">
                                                     <span
                                                         class="up-pill up-pill-{{ $cls === 'danger' ? 'danger' : $cls }}">{{ ucfirst($row->status ?? '-') }}</span>
