@@ -224,43 +224,41 @@ class UserController extends Controller
         $payments = Payment::where('user_id', $userId)->get()->map(function ($p) {
             $details = Payment::getProductDetails($p->product_type);
 
-            return (object) [
-                'source'       => 'payment',
-                'product_type' => $p->product_type,
-                'product_name' => $details['name'] ?? $p->product_type,
-                'amount'       => $p->amount,
-                'txn_ref'      => $p->txn_ref,
-                'order_id'     => $p->order_id,
-                'status'       => $p->status,
-                'date'         => $p->paid_at ?? $p->created_at,
-            ];
+            $p->source = 'payment';
+            $p->product_name = $details['name'] ?? $p->product_type;
+            $p->date = $p->paid_at ?? $p->created_at;
+
+            return $p;
         });
 
         $tempPayments = TempPayment::where('user_id', $userId)->get()->map(function ($t) {
             $details = Payment::getProductDetails($t->product_type);
 
-            return (object) [
-                'source'       => 'temp_payment',
-                'product_type' => $t->product_type,
-                'product_name' => $details['name'] ?? $t->product_type,
-                'amount'       => $t->amount,
-                'txn_ref'      => $t->txn_ref,
-                'order_id'     => $t->order_id,
-                'status'       => $t->status,
-                'date'         => $t->created_at,
-            ];
+            $t->source = 'temp_payment';
+            $t->product_name = $details['name'] ?? $t->product_type;
+            $t->date = $t->created_at;
+
+            return $t;
         });
 
-        $allPayments = $payments->merge($tempPayments)->sortByDesc('date')->values();
+        $allPayments = $payments
+            ->merge($tempPayments)
+            ->sortByDesc('date')
+            ->values();
 
         $pendingStatuses = ['pending', 'initiated', 'processing'];
-        $failedStatuses  = ['failed', 'expired'];
+        $failedStatuses = ['failed', 'expired'];
 
         $pending = $allPayments->whereIn('status', $pendingStatuses)->values();
         $success = $allPayments->where('status', 'success')->values();
-        $failed  = $allPayments->whereIn('status', $failedStatuses)->values();
+        $failed = $allPayments->whereIn('status', $failedStatuses)->values();
 
-        return view('user.payments', compact('allPayments', 'pending', 'success', 'failed'));
+        return view('user.payments', compact(
+            'allPayments',
+            'pending',
+            'success',
+            'failed'
+        ));
     }
 
     /**

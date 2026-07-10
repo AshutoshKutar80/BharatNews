@@ -62,9 +62,7 @@
                             </a>
 
                             <div class="dropdown-divider"></div>
-                            <a href="{{ route('logout') }}"
-                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                                class="text-danger">
+                            <a href="#" onclick="confirmLogout(event, 'logout-form')" class="text-danger">
                                 Logout
                             </a>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -120,8 +118,7 @@
                 <a href="{{ route('ticket.index') }}" class="{{ request()->routeIs('ticket.index') ? 'active' : '' }}">
                     <i class="fa-solid fa-ticket"></i> Support
                 </a>
-                <a href="{{ route('logout') }}"
-                    onclick="event.preventDefault(); document.getElementById('logout-form-mobile').submit();"
+                <a href="#" onclick="confirmLogout(event, 'logout-form-mobile')"
                     class="sidebar-nav-logout text-danger">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </a>

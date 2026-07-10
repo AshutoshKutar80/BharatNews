@@ -36,6 +36,7 @@
                     </div>
                 </div>
 
+                <!-- Info Grid Component -->
                 <div class="up-info-grid">
                     <div class="up-info-item">
                         <span class="up-info-label">Email</span>
@@ -77,8 +78,8 @@
                     </div>
                 </div>
 
-                <p class="up-note">Need to change something above? Please raise a support ticket rather than editing
-                    this page directly.</p>
+                <p class="up-note">Need to change something above? Please raise a support ticket rather than editing this
+                    page directly.</p>
             </div>
         </div>
     </section>

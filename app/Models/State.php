@@ -24,6 +24,6 @@ class State extends Model
     // Relationship with tehsils
     public function tehsils()
     {
-        return $this->hasMany(Tehsil::class, 'disid', 'id');
+        return $this->hasMany(TehsilList::class, 'disid', 'id');
     }
 }

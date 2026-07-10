@@ -107,6 +107,8 @@ Route::middleware(['auth', 'role:admin'])
         Route::post('/contacts/bulk-delete', [AdminContactController::class, 'bulkDelete'])->name('contacts.bulk-delete');
         Route::post('/contacts/{id}/mark-read', [AdminContactController::class, 'markAsRead'])->name('contacts.mark-read');
         Route::get('/contacts/export', [AdminContactController::class, 'export'])->name('contacts.export');
+        Route::post('/logout', [UserController::class, 'logout'])->name('logout');
+
 
         // Tickets 
         Route::get('/tickets', [TicketController::class, 'tickets'])->name('tickets');
@@ -116,5 +118,4 @@ Route::middleware(['auth', 'role:admin'])
 
         //logout
         Route::post('/logout', [UserController::class, 'logout'])->name('logout');
-
     });
