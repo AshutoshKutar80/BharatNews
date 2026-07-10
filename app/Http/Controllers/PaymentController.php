@@ -130,10 +130,6 @@ class PaymentController extends Controller
         return redirect()->route('payment.failed', ['order_id' => $orderId]);
     }
 
-    // ============================================
-    // Helper 1: Cashfree se poochna "iska status kya hai"
-    // Har jagah (callback, admin approve) yehi function use hoga
-    // ============================================
     private function getGatewayStatus($orderId)
     {
         $response = Http::withHeaders([
@@ -204,11 +200,6 @@ class PaymentController extends Controller
         $tempPayment->delete();
     }
 
-    // ============================================
-    // Admin manually approve karta hai (jab kabhi redirect
-    // ya webhook miss ho jaaye) — yeh bhi gateway se confirm
-    // karke hi approve karta hai, blindly nahi
-    // ============================================
     public function adminApprove(TempPayment $tempPayment)
     {
         $status = $this->getGatewayStatus($tempPayment->order_id);
@@ -216,7 +207,7 @@ class PaymentController extends Controller
         if ($status !== 'PAID') {
             return [
                 'success' => false,
-                'message' => "Gateway ne confirm nahi kiya (status: " . ($status ?? 'unknown') . "). Approve nahi hua.",
+                'message' => "Gateway not confirm  (status: " . ($status ?? 'unknown') . "). Not Approved .",
             ];
         }
 
@@ -224,7 +215,7 @@ class PaymentController extends Controller
 
         return [
             'success' => true,
-            'message' => 'Gateway ne confirm kiya, payment approve ho gaya.',
+            'message' => 'Gateway Confirm, Payment Approve.',
         ];
     }
 

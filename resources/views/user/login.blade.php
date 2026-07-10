@@ -604,8 +604,10 @@
                     .then(async (response) => {
                         const data = await response.json().catch(() => ({}));
                         if (!response.ok) {
-                            throw new Error(data.message ||
+                            const error = new Error(data.message ||
                                 'Invalid credentials. Please try again.');
+                            error.reason = data.reason || 'unknown';
+                            throw error;
                         }
                         return data;
                     })
@@ -625,13 +627,39 @@
                         submitBtn.innerHTML = 'Redirecting...';
                     })
                     .catch((err) => {
-                        Swal.fire({
+                        // Different icon/title based on WHY the login failed
+                        const alertConfig = {
+                            blocked: {
+                                icon: 'error',
+                                title: 'Account Blocked'
+                            },
+                            pending: {
+                                icon: 'info',
+                                title: 'Approval Pending'
+                            },
+                            reject: {
+                                icon: 'error',
+                                title: 'Registration Rejected'
+                            },
+                            invalid_credentials: {
+                                icon: 'error',
+                                title: 'Login Failed'
+                            }
+                        };
+
+                        const config = alertConfig[err.reason] || {
                             icon: 'error',
-                            title: 'Login Failed',
+                            title: 'Login Failed'
+                        };
+
+                        Swal.fire({
+                            icon: config.icon,
+                            title: config.title,
                             text: err.message || 'Invalid credentials. Please try again.',
                             confirmButtonColor: '#e74c3c',
-                            confirmButtonText: 'Try Again'
+                            confirmButtonText: 'OK'
                         });
+
                         submitBtn.disabled = false;
                         submitBtn.innerHTML =
                             '<span>Login Now</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';

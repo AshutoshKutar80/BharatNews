@@ -71,7 +71,6 @@ class UserController extends Controller
     }
 
 
-
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -93,28 +92,45 @@ class UserController extends Controller
 
         $user = User::where('mobile', $mobile)->first();
 
-        if ($user && $user->password === $request->password) {
-
-            Auth::login($user, $request->boolean('remember'));
-
-            $request->session()->regenerate();
-
-            $redirect = match ($user->role) {
-                'admin' => route('admin.dashboard'),
-                default => route('dashboard'),
-            };
-
+        // Credentials check first - don't leak account status to a wrong guesser
+        if (!$user || $user->password !== $request->password) {
             return response()->json([
-                'success' => true,
-                'message' => 'Login successful!',
-                'redirect' => $redirect,
-            ]);
+                'success' => false,
+                'message' => 'Invalid mobile number or password. Please try again.',
+                'reason' => 'invalid_credentials'
+            ], 401);
         }
 
+        // Single status column check: pending | approved | reject | blocked
+        if ($user->status !== 'approved') {
+            $messages = [
+                'pending' => 'Your account is pending admin approval. Please wait or contact support.',
+                'reject' => 'Your account registration was rejected. Please contact support for more details.',
+                'blocked' => 'Your account has been blocked. Please contact support for assistance.',
+            ];
+
+            return response()->json([
+                'success' => false,
+                'message' => $messages[$user->status] ?? 'Your account is not active. Please contact support.',
+                'reason' => $user->status
+            ], 403);
+        }
+
+        // Status is 'approved' - proceed with login
+        Auth::login($user, $request->boolean('remember'));
+
+        $request->session()->regenerate();
+
+        $redirect = match ($user->role) {
+            'admin' => route('admin.dashboard'),
+            default => route('dashboard'),
+        };
+
         return response()->json([
-            'success' => false,
-            'message' => 'Invalid mobile number or password. Please try again.'
-        ], 401);
+            'success' => true,
+            'message' => 'Login successful!',
+            'redirect' => $redirect,
+        ]);
     }
 
     public function dashboard()
@@ -211,54 +227,21 @@ class UserController extends Controller
         return view('user.contacts', compact('contacts'));
     }
 
-    /**
-     * Payment history for the logged in user, grouped by status
-     * (pending, success, failed) and merged from both the
-     * finalised `payments` table and the `temp_payments` table
-     * (for attempts that never completed).
-     */
     public function payments()
     {
         $userId = Auth::id();
 
-        $payments = Payment::where('user_id', $userId)->get()->map(function ($p) {
-            $details = Payment::getProductDetails($p->product_type);
+        $payments = Payment::where('user_id', $userId)
+            ->where('status', 'success')
+            ->latest('paid_at')
+            ->get()
+            ->map(function ($p) {
+                $details = Payment::getProductDetails($p->product_type);
+                $p->product_name = $details['name'] ?? $p->product_type;
+                return $p;
+            });
 
-            $p->source = 'payment';
-            $p->product_name = $details['name'] ?? $p->product_type;
-            $p->date = $p->paid_at ?? $p->created_at;
-
-            return $p;
-        });
-
-        $tempPayments = TempPayment::where('user_id', $userId)->get()->map(function ($t) {
-            $details = Payment::getProductDetails($t->product_type);
-
-            $t->source = 'temp_payment';
-            $t->product_name = $details['name'] ?? $t->product_type;
-            $t->date = $t->created_at;
-
-            return $t;
-        });
-
-        $allPayments = $payments
-            ->merge($tempPayments)
-            ->sortByDesc('date')
-            ->values();
-
-        $pendingStatuses = ['pending', 'initiated', 'processing'];
-        $failedStatuses = ['failed', 'expired'];
-
-        $pending = $allPayments->whereIn('status', $pendingStatuses)->values();
-        $success = $allPayments->where('status', 'success')->values();
-        $failed = $allPayments->whereIn('status', $failedStatuses)->values();
-
-        return view('user.payments', compact(
-            'allPayments',
-            'pending',
-            'success',
-            'failed'
-        ));
+        return view('user.payments', compact('payments'));
     }
 
     /**
