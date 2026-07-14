@@ -11,6 +11,12 @@
             {{-- Desktop Navigation Links --}}
             <nav class="nav-links" id="navLinks" aria-label="Main Navigation">
 
+                {{-- General Links --}}
+                <a href="{{ route('home') }}" class="{{ request()->is('/') ? 'active' : '' }}">Home</a>
+                <a href="{{ route('about') }}" class="{{ request()->is('about') ? 'active' : '' }}">About Us</a>
+                <a href="{{ route('services') }}" class="{{ request()->is('services') ? 'active' : '' }}">Services</a>
+                <a href="{{ route('contact') }}" class="{{ request()->is('contact') ? 'active' : '' }}">Contact Us</a>
+
                 {{-- Authentication Section --}}
                 @guest
                     {{-- Guest Dropdown --}}
@@ -40,21 +46,6 @@
                             <a href="{{ route('profile') }}" class="{{ request()->is('profile') ? 'active' : '' }}">
                                 More Details
                             </a>
-                            {{-- <div class="dropdown-divider"></div>
-                            <a href="{{ route('user.contacts') }}"
-                                class="{{ request()->is('my-contacts') ? 'active' : '' }}">
-                                Contacts
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="{{ route('user.payments') }}"
-                                class="{{ request()->is('my-payments') ? 'active' : '' }}">
-                                Payments
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="{{ route('user.products') }}"
-                                class="{{ request()->is('my-products') ? 'active' : '' }}">
-                                Products
-                            </a> --}}
                             <div class="dropdown-divider"></div>
                             <a href="{{ route('ticket.index') }}"
                                 class="{{ request()->is('ticket.index') ? 'active' : '' }}">
@@ -72,11 +63,6 @@
                     </div>
                 @endguest
 
-                {{-- General Links --}}
-                <a href="{{ route('home') }}" class="{{ request()->is('/') ? 'active' : '' }}">Home</a>
-                <a href="{{ route('about') }}" class="{{ request()->is('about') ? 'active' : '' }}">About Us</a>
-                <a href="{{ route('services') }}" class="{{ request()->is('services') ? 'active' : '' }}">Services</a>
-                <a href="{{ route('contact') }}" class="{{ request()->is('contact') ? 'active' : '' }}">Contact Us</a>
 
             </nav>
 

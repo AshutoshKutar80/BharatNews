@@ -13,6 +13,12 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use App\Mail\ProductApprovedMail;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\UserApprovedMail;
+use App\Mail\UserRejectedMail;
+use App\Mail\UserBlockedMail;
+use App\Mail\UserUnblockedMail;
+use App\Models\State;
+use App\Models\TehsilList;
 
 class AdminController extends Controller
 {
@@ -90,71 +96,229 @@ class AdminController extends Controller
         return view('admin.users.index', compact('users', 'status'));
     }
 
-    public function approveUser($id)
+    public function approveUser(Request $request, $id)
     {
-        $user = User::findOrFail($id);
-        $user->status = 'approved';
-        $user->status_updated_at = now();
-        $user->admin_remark = null;
-        $user->save();
+        try {
+            $user = User::findOrFail($id);
+            $admin = Auth::user();
 
-        Log::info('Admin approved user', ['user_id' => $user->id, 'admin_id' => Auth::id()]);
+            // Check if remark is provided via AJAX
+            if ($request->has('admin_remark')) {
+                $user->admin_remark = $request->admin_remark;
+            }
 
-        return back()->with('success', "User '{$user->name}' has been approved.");
+            $user->status = 'approved';
+            $user->status_updated_at = now();
+            $user->save();
+
+            // Send email notification
+            try {
+                Mail::to($user->email)->send(new UserApprovedMail($user, $admin));
+                Log::info('Approval email sent to user', ['user_id' => $user->id, 'email' => $user->email]);
+            } catch (\Exception $e) {
+                Log::error('Failed to send approval email', ['user_id' => $user->id, 'error' => $e->getMessage()]);
+            }
+
+            Log::info('Admin approved user', ['user_id' => $user->id, 'admin_id' => Auth::id()]);
+
+            // Check if AJAX request
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => "User '{$user->name}' has been approved.",
+                    'new_status' => 'approved',
+                    'user' => $user
+                ]);
+            }
+
+            return back()->with('success', "User '{$user->name}' has been approved.");
+        } catch (\Exception $e) {
+            Log::error('Error approving user', ['user_id' => $id, 'error' => $e->getMessage()]);
+
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to approve user: ' . $e->getMessage()
+                ], 500);
+            }
+
+            return back()->with('error', 'Failed to approve user.');
+        }
     }
 
     public function rejectUser(Request $request, $id)
     {
-        $request->validate([
-            'remark' => ['nullable', 'string', 'max:500'],
-        ]);
+        try {
+            $validator = Validator::make($request->all(), [
+                'admin_remark' => ['nullable', 'string', 'max:500'],
+            ]);
 
-        $user = User::findOrFail($id);
-        $user->status = 'rejected';
-        $user->status_updated_at = now();
-        $user->admin_remark = $request->remark;
-        $user->save();
+            $user = User::findOrFail($id);
+            $admin = Auth::user();
 
-        Log::info('Admin rejected user', ['user_id' => $user->id, 'admin_id' => Auth::id()]);
+            $user->status = 'rejected';
+            $user->status_updated_at = now();
+            if ($request->has('admin_remark') && !empty($request->admin_remark)) {
+                $user->admin_remark = $request->admin_remark;
+            }
+            $user->save();
 
-        return back()->with('success', "User '{$user->name}' has been rejected.");
+            // Send email notification
+            try {
+                Mail::to($user->email)->send(new UserRejectedMail($user, $admin, $request->admin_remark));
+                Log::info('Rejection email sent to user', ['user_id' => $user->id, 'email' => $user->email]);
+            } catch (\Exception $e) {
+                Log::error('Failed to send rejection email', ['user_id' => $user->id, 'error' => $e->getMessage()]);
+            }
+
+            Log::info('Admin rejected user', ['user_id' => $user->id, 'admin_id' => Auth::id()]);
+
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => "User '{$user->name}' has been rejected.",
+                    'new_status' => 'rejected',
+                    'user' => $user
+                ]);
+            }
+
+            return back()->with('success', "User '{$user->name}' has been rejected.");
+        } catch (\Exception $e) {
+            Log::error('Error rejecting user', ['user_id' => $id, 'error' => $e->getMessage()]);
+
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to reject user: ' . $e->getMessage()
+                ], 500);
+            }
+
+            return back()->with('error', 'Failed to reject user.');
+        }
     }
 
     public function blockUser(Request $request, $id)
     {
-        $request->validate([
-            'remark' => ['nullable', 'string', 'max:500'],
-        ]);
+        try {
+            $validator = Validator::make($request->all(), [
+                'admin_remark' => ['nullable', 'string', 'max:500'],
+            ]);
 
-        $user = User::findOrFail($id);
-        $user->status = 'blocked';
-        $user->status_updated_at = now();
-        if ($request->filled('remark')) {
-            $user->admin_remark = $request->remark;
+            $user = User::findOrFail($id);
+            $admin = Auth::user();
+
+            $user->status = 'blocked';
+            $user->status_updated_at = now();
+            if ($request->has('admin_remark') && !empty($request->admin_remark)) {
+                $user->admin_remark = $request->admin_remark;
+            }
+            $user->save();
+
+            // Send email notification
+            try {
+                Mail::to($user->email)->send(new UserBlockedMail($user, $admin, $request->admin_remark));
+                Log::info('Block email sent to user', ['user_id' => $user->id, 'email' => $user->email]);
+            } catch (\Exception $e) {
+                Log::error('Failed to send block email', ['user_id' => $user->id, 'error' => $e->getMessage()]);
+            }
+
+            Log::info('Admin blocked user', ['user_id' => $user->id, 'admin_id' => Auth::id()]);
+
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => "User '{$user->name}' has been blocked.",
+                    'new_status' => 'blocked',
+                    'user' => $user
+                ]);
+            }
+
+            return back()->with('success', "User '{$user->name}' has been blocked.");
+        } catch (\Exception $e) {
+            Log::error('Error blocking user', ['user_id' => $id, 'error' => $e->getMessage()]);
+
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to block user: ' . $e->getMessage()
+                ], 500);
+            }
+
+            return back()->with('error', 'Failed to block user.');
         }
-        $user->save();
-
-        Log::info('Admin blocked user', ['user_id' => $user->id, 'admin_id' => Auth::id()]);
-
-        return back()->with('success', "User '{$user->name}' has been blocked.");
     }
 
-    public function unblockUser($id)
+    public function unblockUser(Request $request, $id)
     {
-        $user = User::findOrFail($id);
-        $user->status = 'approved';
-        $user->status_updated_at = now();
-        $user->save();
+        try {
+            $user = User::findOrFail($id);
+            $admin = Auth::user();
 
-        Log::info('Admin unblocked user', ['user_id' => $user->id, 'admin_id' => Auth::id()]);
+            $user->status = 'approved';
+            $user->status_updated_at = now();
+            $user->admin_remark = null;
+            $user->save();
 
-        return back()->with('success', "User '{$user->name}' has been unblocked.");
+            try {
+                Mail::to($user->email)->send(new UserUnblockedMail($user, $admin));
+                Log::info('Unblock email sent to user', ['user_id' => $user->id, 'email' => $user->email]);
+            } catch (\Exception $e) {
+                Log::error('Failed to send unblock email', ['user_id' => $user->id, 'error' => $e->getMessage()]);
+            }
+
+            Log::info('Admin unblocked user', ['user_id' => $user->id, 'admin_id' => Auth::id()]);
+
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => "User '{$user->name}' has been unblocked.",
+                    'new_status' => 'approved',
+                    'user' => $user
+                ]);
+            }
+
+            return back()->with('success', "User '{$user->name}' has been unblocked.");
+        } catch (\Exception $e) {
+            Log::error('Error unblocking user', ['user_id' => $id, 'error' => $e->getMessage()]);
+
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to unblock user: ' . $e->getMessage()
+                ], 500);
+            }
+
+            return back()->with('error', 'Failed to unblock user.');
+        }
     }
 
     public function editUser($id)
     {
         $user = User::findOrFail($id);
-        return view('admin.users.edit', compact('user'));
+
+        $states = State::select('states')
+            ->distinct()
+            ->where('status', 1)
+            ->orderBy('states')
+            ->pluck('states');
+
+        $districts = State::where('states', $user->state)
+            ->where('status', 1)
+            ->orderBy('district')
+            ->pluck('district');
+
+        $stateDistrict = State::where('district', $user->district)
+            ->where('status', 1)
+            ->first();
+
+        $tehsils = [];
+        if ($stateDistrict) {
+            $tehsils = TehsilList::where('disid', $stateDistrict->id)
+                ->orderBy('tehsil')
+                ->pluck('tehsil');
+        }
+
+        return view('admin.users.edit', compact('user', 'states', 'districts', 'tehsils'));
     }
 
     public function updateUser(Request $request, $id)
@@ -176,13 +340,50 @@ class AdminController extends Controller
         }
 
         $data = $validator->validated();
-        // mobile intentionally excluded - never mass assigned here
         $user->fill($data);
         $user->save();
 
         Log::info('Admin updated user', ['user_id' => $user->id, 'admin_id' => Auth::id()]);
 
         return redirect()->route('admin.users')->with('success', "User '{$user->name}' updated successfully.");
+    }
+
+
+    /**
+     * Get districts for a given state
+     */
+    public function getDistricts($state)
+    {
+        $districts = State::where('states', $state)
+            ->where('status', 1)
+            ->orderBy('district')
+            ->pluck('district');
+
+        return response()->json([
+            'districts' => $districts
+        ]);
+    }
+
+    /**
+     * Get tehsils for a given district
+     */
+    public function getTehsils($district)
+    {
+        $stateDistrict = State::where('district', $district)
+            ->where('status', 1)
+            ->first();
+
+        if (!$stateDistrict) {
+            return response()->json(['tehsils' => []]);
+        }
+
+        $tehsils = TehsilList::where('disid', $stateDistrict->id)
+            ->orderBy('tehsil')
+            ->pluck('tehsil');
+
+        return response()->json([
+            'tehsils' => $tehsils
+        ]);
     }
 
     // temp_payments
@@ -311,10 +512,7 @@ class AdminController extends Controller
         $product->approved_by = Auth::id();
         $product->save();
 
-        // Send email notification
         try {
-            // Assuming the product has a user relationship
-            // If you have a user_id field in PurchasedProduct
             if ($product->user && $product->user->email) {
                 Mail::to($product->user->email)->send(new ProductApprovedMail($product));
 
@@ -324,8 +522,6 @@ class AdminController extends Controller
                     'tracking_id' => $product->tracking_id,
                 ]);
             } else {
-                // If no user relationship, you might want to send to a default email
-                // or log a warning
                 Log::warning('No email found for product approval notification', [
                     'purchased_product_id' => $product->id
                 ]);
@@ -335,7 +531,6 @@ class AdminController extends Controller
                 'purchased_product_id' => $product->id,
                 'error' => $e->getMessage()
             ]);
-            // Continue with the process even if email fails
         }
 
         Log::info('Admin approved purchased product', [

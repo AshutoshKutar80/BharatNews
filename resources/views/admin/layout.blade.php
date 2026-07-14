@@ -41,6 +41,11 @@
                         <span class="badge-count">{{ $pendingUsers }}</span>
                     @endif
                 </a>
+                <a href="{{ route('admin.success.payments') }}"
+                    class="{{ request()->routeIs('admin.success.payments*') ? 'active' : '' }}">
+                    <span class="ic">💳</span>Success Payments
+                </a>
+
                 <a href="{{ route('admin.payments') }}"
                     class="{{ request()->routeIs('admin.payments*') ? 'active' : '' }}">
                     <span class="ic">💳</span>Temp Payments
@@ -48,11 +53,6 @@
                     @if ($pendingPayments > 0)
                         <span class="badge-count">{{ $pendingPayments }}</span>
                     @endif
-                </a>
-
-                <a href="{{ route('admin.success.payments') }}"
-                    class="{{ request()->routeIs('admin.success.payments*') ? 'active' : '' }}">
-                    <span class="ic">💳</span>Success Payments
                 </a>
 
                 <a href="{{ route('admin.purchased-products') }}"
@@ -160,7 +160,7 @@
             Swal.fire({
                 icon: 'success',
                 title: 'Success!',
-                text: "{{ session('success') }}",
+                text: @json(session('success')),
                 confirmButtonColor: '#198754',
                 timer: 3000,
                 timerProgressBar: true
@@ -171,7 +171,7 @@
             Swal.fire({
                 icon: 'error',
                 title: 'Error!',
-                text: "{{ session('error') }}",
+                text: @json(session('error')),
                 confirmButtonColor: '#dc3545'
             });
         @endif

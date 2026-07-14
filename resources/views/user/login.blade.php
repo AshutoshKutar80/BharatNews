@@ -4,7 +4,6 @@
 @section('meta_description',
     'Login to your Bharat Integrity Forum News account to access your dashboard and manage your
     profile.')
-@section('meta_keywords', 'login, sign in, Bharat Integrity Forum')
 
 @section('content')
 
@@ -96,9 +95,9 @@
 
 
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+            /* max-width: 1200px;
+                margin: 0 auto; */
+            /* padding: 0 20px; */
         }
 
         .req {

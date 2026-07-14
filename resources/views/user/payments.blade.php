@@ -21,12 +21,12 @@
         <div class="container">
             @include('user.partials.subnav', ['active' => 'payments'])
 
-            <div class="up-stats-grid">
+            {{-- <div class="up-stats-grid">
                 <div class="up-stat-card">
                     <span class="up-stat-number up-text-success">{{ $payments->count() }}</span>
                     <span class="up-stat-label">Successful Payments</span>
                 </div>
-            </div>
+            </div> --}}
 
             <div class="up-card up-card-pad0">
                 @if ($payments->isEmpty())

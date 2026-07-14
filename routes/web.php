@@ -76,6 +76,9 @@ Route::middleware(['auth', 'role:admin'])
     ->group(function () {
 
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+        // AJAX routes for dropdowns
+        Route::get('/get-districts/{state}', [AdminController::class, 'getDistricts'])->name('get.districts');
+        Route::get('/get-tehsils/{district}', [AdminController::class, 'getTehsils'])->name('get.tehsils');
 
         // Users
         Route::get('/users', [AdminController::class, 'users'])->name('users');

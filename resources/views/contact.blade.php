@@ -195,10 +195,28 @@
                             <label for="name"
                                 style="display: block; font-weight: 600; font-size: 14px; color: #333; margin-bottom: 6px;">Full
                                 Name <span style="color: #e74c3c;">*</span></label>
-                            <input type="text" id="name" name="name" value="{{ Auth::user()->name ?? '' }}"
-                                placeholder="Enter your full name"
-                                style="width: 100%; padding: 14px 16px; border: 2px solid #e8e8e8; border-radius: 10px; font-size: 15px; transition: all 0.3s; outline: none;"
-                                onfocus="this.style.borderColor='#e74c3c'" onblur="this.style.borderColor='#e8e8e8'">
+                            <div style="position: relative;">
+                                <input type="text" id="name" name="name"
+                                    value="{{ Auth::user()->name ?? '' }}"
+                                    @auth
+readonly
+                                        style="width: 100%; padding: 14px 16px; border: 2px solid #e8e8e8; border-radius: 10px; font-size: 15px; transition: all 0.3s; outline: none; background: #f5f5f5; cursor: not-allowed;"
+                                    @else
+                                        placeholder="Enter your full name"
+                                        style="width: 100%; padding: 14px 16px; border: 2px solid #e8e8e8; border-radius: 10px; font-size: 15px; transition: all 0.3s; outline: none;"
+                                        onfocus="this.style.borderColor='#e74c3c'" onblur="this.style.borderColor='#e8e8e8'" @endauth>
+                                @auth
+                                    <span
+                                        style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #059669; font-size: 14px;">
+                                        🔒
+                                    </span>
+                                @endauth
+                            </div>
+                            @auth
+                                <p style="font-size: 12px; color: #888; margin-top: 4px;">
+                                    <span style="color: #059669;">✓</span> Auto-filled from your profile
+                                </p>
+                            @endauth
                             <div class="error-message" id="nameError"
                                 style="color: #e74c3c; font-size: 13px; margin-top: 5px; display: none;"></div>
                         </div>
@@ -208,10 +226,29 @@
                             <label for="mobile"
                                 style="display: block; font-weight: 600; font-size: 14px; color: #333; margin-bottom: 6px;">Mobile
                                 Number <span style="color: #e74c3c;">*</span></label>
-                            <input type="tel" id="mobile" name="mobile" placeholder="9999999999"
-                                value="{{ Auth::user()->mobile ?? '' }}" min="10" max="10"
-                                style="width: 100%; padding: 14px 16px; border: 2px solid #e8e8e8; border-radius: 10px; font-size: 15px; transition: all 0.3s; outline: none;"
-                                onfocus="this.style.borderColor='#e74c3c'" onblur="this.style.borderColor='#e8e8e8'">
+                            <div style="position: relative;">
+                                <input type="tel" id="mobile" name="mobile"
+                                    value="{{ Auth::user()->mobile ?? '' }}"
+                                    @auth
+readonly
+                                        style="width: 100%; padding: 14px 16px; border: 2px solid #e8e8e8; border-radius: 10px; font-size: 15px; transition: all 0.3s; outline: none; background: #f5f5f5; cursor: not-allowed;"
+                                    @else
+                                        placeholder="9999999999"
+                                        maxlength="10" minlength="10" pattern="[0-9]{10}"
+                                        style="width: 100%; padding: 14px 16px; border: 2px solid #e8e8e8; border-radius: 10px; font-size: 15px; transition: all 0.3s; outline: none;"
+                                        onfocus="this.style.borderColor='#e74c3c'" onblur="this.style.borderColor='#e8e8e8'" @endauth>
+                                @auth
+                                    <span
+                                        style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #059669; font-size: 14px;">
+                                        🔒
+                                    </span>
+                                @endauth
+                            </div>
+                            @auth
+                                <p style="font-size: 12px; color: #888; margin-top: 4px;">
+                                    <span style="color: #059669;">✓</span> Auto-filled from your profile
+                                </p>
+                            @endauth
                             <div class="error-message" id="mobileError"
                                 style="color: #e74c3c; font-size: 13px; margin-top: 5px; display: none;"></div>
                         </div>
@@ -221,10 +258,28 @@
                             <label for="email"
                                 style="display: block; font-weight: 600; font-size: 14px; color: #333; margin-bottom: 6px;">Email
                                 Address <span style="color: #e74c3c;">*</span></label>
-                            <input type="email" id="email" name="email" value="{{ Auth::user()->email ?? '' }}"
-                                placeholder="you@example.com"
-                                style="width: 100%; padding: 14px 16px; border: 2px solid #e8e8e8; border-radius: 10px; font-size: 15px; transition: all 0.3s; outline: none;"
-                                onfocus="this.style.borderColor='#e74c3c'" onblur="this.style.borderColor='#e8e8e8'">
+                            <div style="position: relative;">
+                                <input type="email" id="email" name="email"
+                                    value="{{ Auth::user()->email ?? '' }}"
+                                    @auth
+readonly
+                                        style="width: 100%; padding: 14px 16px; border: 2px solid #e8e8e8; border-radius: 10px; font-size: 15px; transition: all 0.3s; outline: none; background: #f5f5f5; cursor: not-allowed;"
+                                    @else
+                                        placeholder="you@example.com"
+                                        style="width: 100%; padding: 14px 16px; border: 2px solid #e8e8e8; border-radius: 10px; font-size: 15px; transition: all 0.3s; outline: none;"
+                                        onfocus="this.style.borderColor='#e74c3c'" onblur="this.style.borderColor='#e8e8e8'" @endauth>
+                                @auth
+                                    <span
+                                        style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #059669; font-size: 14px;">
+                                        🔒
+                                    </span>
+                                @endauth
+                            </div>
+                            @auth
+                                <p style="font-size: 12px; color: #888; margin-top: 4px;">
+                                    <span style="color: #059669;">✓</span> Auto-filled from your profile
+                                </p>
+                            @endauth
                             <div class="error-message" id="emailError"
                                 style="color: #e74c3c; font-size: 13px; margin-top: 5px; display: none;"></div>
                         </div>
@@ -312,72 +367,6 @@
         </div>
     </section>
 
-    {{-- ================= FAQ SECTION ================= --}}
-    {{-- <section style="padding: 80px 0; background: #fff;">
-        <div class="container">
-            <div class="section-head reveal" style="text-align: center; margin-bottom: 50px;">
-                <span class="eyebrow"
-                    style="color: #e74c3c; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; font-size: 13px;">FAQ</span>
-                <h2 style="font-size: 36px; margin: 10px 0 15px; color: #1a1a2e;">Frequently Asked Questions</h2>
-                <p style="color: #666; max-width: 500px; margin: 0 auto; font-size: 16px;">Quick answers to common
-                    questions</p>
-            </div>
-
-            <div style="max-width: 800px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-                <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; border-left: 4px solid #e74c3c;">
-                    <h4 style="font-size: 16px; font-weight: 700; color: #1a1a2e; margin-bottom: 8px;">How can I register
-                        for a Reporter ID?</h4>
-                    <p style="font-size: 14px; color: #666; line-height: 1.6; margin: 0;">You can apply through our <a
-                            href="#" style="color: #e74c3c; text-decoration: none;">Reporter Registration</a> page
-                        or contact us via the form above.</p>
-                </div>
-                <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; border-left: 4px solid #3498db;">
-                    <h4 style="font-size: 16px; font-weight: 700; color: #1a1a2e; margin-bottom: 8px;">What services do you
-                        offer?</h4>
-                    <p style="font-size: 14px; color: #666; line-height: 1.6; margin: 0;">We provide news reporting,
-                        digital media coverage, reporter ID registration, and content publishing services.</p>
-                </div>
-                <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; border-left: 4px solid #2ecc71;">
-                    <h4 style="font-size: 16px; font-weight: 700; color: #1a1a2e; margin-bottom: 8px;">How quickly do you
-                        respond?</h4>
-                    <p style="font-size: 14px; color: #666; line-height: 1.6; margin: 0;">Our team typically responds
-                        within 24 hours during business days. For urgent matters, please call us directly.</p>
-                </div>
-                <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; border-left: 4px solid #f39c12;">
-                    <h4 style="font-size: 16px; font-weight: 700; color: #1a1a2e; margin-bottom: 8px;">Can I submit a news
-                        tip?</h4>
-                    <p style="font-size: 14px; color: #666; line-height: 1.6; margin: 0;">Yes! You can submit news tips,
-                        stories, or press releases through our contact form or email us directly.</p>
-                </div>
-            </div>
-        </div>
-    </section> --}}
-
-    {{-- ================= CTA SECTION ================= --}}
-    {{-- <section style="padding: 60px 0; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #fff;">
-        <div class="container">
-            <div style="text-align: center; max-width: 700px; margin: 0 auto;">
-                <h3 style="font-size: 28px; font-weight: 700; margin-bottom: 15px; color: #ccc">Want to Collaborate with
-                    Us?</h3>
-                <p style="color: #ccc; font-size: 16px; line-height: 1.8; margin-bottom: 25px;">Partner with Bharat
-                    Integrity Forum for media coverage, reporting, and digital presence.</p>
-                <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-                    <a href="#"
-                        style="background: #e74c3c; color: #fff; padding: 14px 35px; border-radius: 30px; text-decoration: none; font-weight: 600; transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px;"
-                        onmouseover="this.style.background='#c0392b'" onmouseout="this.style.background='#e74c3c'">
-                        Get In Touch
-                    </a>
-                    <a href="#"
-                        style="background: transparent; color: #fff; padding: 14px 35px; border-radius: 30px; text-decoration: none; font-weight: 600; border: 2px solid rgba(255,255,255,0.3); transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px;"
-                        onmouseover="this.style.borderColor='#fff'"
-                        onmouseout="this.style.borderColor='rgba(255,255,255,0.3)'">
-                        Call Us
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section> --}}
-
 @endsection
 
 @push('styles')
@@ -417,6 +406,10 @@
         input.success,
         textarea.success {
             border-color: #2ecc71 !important;
+        }
+
+        input:read-only {
+            cursor: not-allowed !important;
         }
 
         @media (max-width: 768px) {
@@ -477,32 +470,38 @@
                 name: {
                     element: document.getElementById('name'),
                     error: document.getElementById('nameError'),
-                    rules: ['required']
+                    rules: ['required'],
+                    isReadonly: document.getElementById('name').hasAttribute('readonly')
                 },
                 mobile: {
                     element: document.getElementById('mobile'),
                     error: document.getElementById('mobileError'),
-                    rules: ['required', 'mobile']
+                    rules: ['required', 'mobile'],
+                    isReadonly: document.getElementById('mobile').hasAttribute('readonly')
                 },
                 email: {
                     element: document.getElementById('email'),
                     error: document.getElementById('emailError'),
-                    rules: ['required', 'email']
+                    rules: ['required', 'email'],
+                    isReadonly: document.getElementById('email').hasAttribute('readonly')
                 },
                 subject: {
                     element: document.getElementById('subject'),
                     error: document.getElementById('subjectError'),
-                    rules: ['required']
+                    rules: ['required'],
+                    isReadonly: false
                 },
                 message: {
                     element: document.getElementById('message'),
                     error: document.getElementById('messageError'),
-                    rules: ['required', 'min:10']
+                    rules: ['required', 'min:10'],
+                    isReadonly: false
                 },
                 privacy: {
                     element: document.getElementById('privacy'),
                     error: document.getElementById('privacyError'),
-                    rules: ['required']
+                    rules: ['required'],
+                    isReadonly: false
                 }
             };
 
@@ -515,6 +514,14 @@
                     .element.value.trim();
                 let isValid = true;
                 let errorMsg = '';
+
+                // Skip validation for readonly fields (they're auto-filled)
+                if (field.isReadonly && value) {
+                    field.element.classList.remove('error');
+                    field.element.classList.add('success');
+                    field.error.style.display = 'none';
+                    return true;
+                }
 
                 // Check required
                 if (field.rules.includes('required') && !value) {
@@ -566,18 +573,25 @@
                 return isValid;
             }
 
-            // Add validation listeners
+            // Add validation listeners (only for non-readonly fields)
             Object.keys(fields).forEach(key => {
                 const field = fields[key];
-                const event = field.element.type === 'checkbox' ? 'change' : 'blur';
-                field.element.addEventListener(event, function() {
-                    validateField(key);
-                });
-                // Also validate on input for text fields
-                if (field.element.type !== 'checkbox') {
-                    field.element.addEventListener('input', function() {
+                if (!field.isReadonly) {
+                    const event = field.element.type === 'checkbox' ? 'change' : 'blur';
+                    field.element.addEventListener(event, function() {
                         validateField(key);
                     });
+                    // Also validate on input for text fields
+                    if (field.element.type !== 'checkbox') {
+                        field.element.addEventListener('input', function() {
+                            validateField(key);
+                        });
+                    }
+                } else {
+                    // For readonly fields, just mark as success
+                    if (field.element.value) {
+                        field.element.classList.add('success');
+                    }
                 }
             });
 
@@ -646,12 +660,17 @@
                                 timerProgressBar: true
                             });
 
-                            // Reset form
+                            // Reset form (only non-readonly fields)
                             form.reset();
                             Object.keys(fields).forEach(key => {
                                 const field = fields[key];
-                                field.element.classList.remove('success', 'error');
-                                field.error.style.display = 'none';
+                                if (!field.isReadonly) {
+                                    field.element.classList.remove('success', 'error');
+                                    field.error.style.display = 'none';
+                                } else {
+                                    // Keep readonly fields with their values and success class
+                                    field.element.classList.add('success');
+                                }
                             });
                             charCount.textContent = '0 / 5000';
 

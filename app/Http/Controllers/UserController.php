@@ -199,12 +199,6 @@ class UserController extends Controller
         ]);
     }
 
-    /* =====================================================
-     |  READ-ONLY PROFILE / CONTACTS / PAYMENTS / PRODUCTS
-     |  These pages only ever DISPLAY data for the logged in
-     |  user. No update/delete actions are exposed here.
-     |===================================================== */
-
     /**
      * Read-only profile page for the logged in user.
      */

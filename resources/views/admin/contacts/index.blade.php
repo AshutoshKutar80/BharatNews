@@ -6,14 +6,15 @@
 
 @section('content')
     <style>
-        html,
-        body {
-            max-width: 100%;
-            overflow-x: hidden;
-        }
+        /* ============================================================
+               PAGE SPECIFIC STYLES - Only affects this page
+               ============================================================ */
 
-        * {
-            box-sizing: border-box;
+        /* Ensure content takes full height and scrolls properly */
+        .admin-content {
+            padding: 24px;
+            height: 100%;
+            overflow-y: auto;
         }
 
         /* Tab Navigation */
@@ -30,6 +31,7 @@
             -webkit-overflow-scrolling: touch;
             scrollbar-width: thin;
             min-width: 0;
+            flex-shrink: 0;
         }
 
         .tab-nav a {
@@ -71,15 +73,16 @@
             color: #475569;
         }
 
-        /* Table Styles */
+        /* Panel / Card Styles */
         .panel {
             background: white;
             border-radius: 16px;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
             margin-bottom: 32px;
-            overflow: hidden;
             border: 1px solid #e2e8f0;
             max-width: 100%;
+            display: flex;
+            flex-direction: column;
         }
 
         .panel-head {
@@ -91,6 +94,7 @@
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 12px;
+            flex-shrink: 0;
         }
 
         .panel-head h3 {
@@ -100,37 +104,37 @@
             color: #0f172a;
         }
 
-        .badge-status {
-            padding: 4px 14px;
-            border-radius: 30px;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .badge-status.pending {
-            background: #fef3c7;
-            color: #92400e;
-        }
-
-        .badge-status.read {
-            background: #dbeafe;
-            color: #1e40af;
-        }
-
-        .badge-status.replied {
-            background: #d1fae5;
-            color: #065f46;
-        }
-
+        /* Table container - scrollable */
         .panel-body {
             padding: 0;
             overflow-x: auto;
+            overflow-y: visible;
+            flex: 1;
+        }
+
+        .panel-body::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .panel-body::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+
+        .panel-body::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .panel-body::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
         }
 
         .admin-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 14px;
+            min-width: 800px;
         }
 
         .admin-table th {
@@ -141,6 +145,9 @@
             color: #475569;
             border-bottom: 2px solid #e2e8f0;
             white-space: nowrap;
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
 
         .admin-table td {
@@ -171,6 +178,29 @@
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
+        }
+
+        .badge-status {
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .badge-status.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-status.read {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .badge-status.replied {
+            background: #d1fae5;
+            color: #065f46;
         }
 
         .btn-sm {
@@ -231,6 +261,36 @@
             margin-bottom: 12px;
         }
 
+        .checkbox-column {
+            width: 40px;
+            text-align: center;
+        }
+
+        .checkbox-column input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #0f172a;
+            cursor: pointer;
+        }
+
+        .subject-preview {
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+        }
+
+        .message-preview {
+            max-width: 300px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+            color: #64748b;
+            font-size: 13px;
+        }
+
         /* Pagination */
         .pagination-wrap {
             padding: 16px 24px;
@@ -240,6 +300,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-shrink: 0;
         }
 
         .pagination-wrap .pagination {
@@ -300,6 +361,7 @@
             align-items: center;
             gap: 12px;
             flex-wrap: wrap;
+            flex-shrink: 0;
         }
 
         .bulk-actions select {
@@ -314,39 +376,17 @@
             padding: 8px 20px;
         }
 
-        .checkbox-column {
-            width: 40px;
-            text-align: center;
-        }
-
-        .checkbox-column input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-            accent-color: #0f172a;
-            cursor: pointer;
-        }
-
-        .subject-preview {
-            max-width: 200px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: block;
-        }
-
-        .message-preview {
-            max-width: 300px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: block;
-            color: #64748b;
+        #selectedCount {
             font-size: 13px;
+            color: #94a3b8;
+            margin-left: auto;
         }
 
         /* ============================================================
-               TABLET  (577px – 991px)
-               ============================================================ */
+                       RESPONSIVE
+                       ============================================================ */
+
+        /* Tablet */
         @media (min-width: 577px) and (max-width: 991px) {
             .admin-table {
                 font-size: 13px;
@@ -367,9 +407,7 @@
             }
         }
 
-        /* ============================================================
-               LAPTOP  (992px – 1199px)
-               ============================================================ */
+        /* Laptop */
         @media (min-width: 992px) and (max-width: 1199px) {
             .admin-table {
                 font-size: 13.5px;
@@ -381,14 +419,12 @@
             }
         }
 
-        /* ============================================================
-               DESKTOP  (≥ 1200px) — default styles already good
-               ============================================================ */
-
-        /* ============================================================
-               MOBILE  (≤ 576px) — cards
-               ============================================================ */
+        /* Mobile - Cards View */
         @media (max-width: 576px) {
+            .admin-content {
+                padding: 16px;
+            }
+
             .tab-nav {
                 padding: 6px;
                 gap: 4px;
@@ -403,6 +439,14 @@
                 padding: 14px;
                 flex-direction: column;
                 align-items: stretch;
+            }
+
+            .panel-body {
+                overflow-x: visible;
+            }
+
+            .admin-table {
+                min-width: 100%;
             }
 
             .admin-table thead {
@@ -542,7 +586,7 @@
                         <tbody>
                             @foreach ($contacts as $contact)
                                 <tr class="{{ $contact->status === 'pending' ? 'unread' : '' }}">
-                                    <td class="checkbox-column">
+                                    <td class="checkbox-column" data-label="Select">
                                         <input type="checkbox" name="ids[]" value="{{ $contact->id }}"
                                             class="contact-checkbox">
                                     </td>
@@ -608,7 +652,7 @@
                             onclick="return confirm('Delete selected contacts?')">
                             🗑 Delete Selected
                         </button>
-                        <span id="selectedCount" style="font-size: 13px; color: #94a3b8; margin-left: auto;">
+                        <span id="selectedCount">
                             0 selected
                         </span>
                     </div>
@@ -647,6 +691,7 @@
                     }
                 }
 
+                // Confirm delete
                 document.querySelectorAll('form[data-confirm]').forEach(form => {
                     form.addEventListener('submit', function(e) {
                         const message = this.getAttribute('data-confirm');
@@ -655,6 +700,21 @@
                         }
                     });
                 });
+
+                // Update the bulk delete form to confirm
+                const bulkForm = document.getElementById('bulkForm');
+                if (bulkForm) {
+                    bulkForm.addEventListener('submit', function(e) {
+                        const checked = document.querySelectorAll('.contact-checkbox:checked').length;
+                        if (checked === 0) {
+                            e.preventDefault();
+                            alert('Please select at least one contact to delete.');
+                        } else if (!confirm('Delete ' + checked +
+                                ' selected contact(s)? This cannot be undone.')) {
+                            e.preventDefault();
+                        }
+                    });
+                }
             });
         </script>
     @endpush

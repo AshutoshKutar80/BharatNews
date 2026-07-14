@@ -58,7 +58,7 @@ class PaymentController extends Controller
 
         // Cashfree ko order banane ke liye bolo
         $response = Http::withHeaders([
-            'x-api-version' => '2022-09-01',
+            'x-api-version' => '2025-01-01',
             'x-client-id' => $this->appId,
             'x-client-secret' => $this->secretKey,
         ])->post($this->baseUrl . '/orders', [
@@ -141,7 +141,7 @@ class PaymentController extends Controller
     private function getGatewayStatus($orderId)
     {
         $response = Http::withHeaders([
-            'x-api-version' => '2022-09-01',
+            'x-api-version' => '2025-01-01',
             'x-client-id' => $this->appId,
             'x-client-secret' => $this->secretKey,
         ])->get($this->baseUrl . '/orders/' . $orderId . '/payments');
@@ -217,7 +217,7 @@ class PaymentController extends Controller
 
             return [
                 'success' => false,
-                'message' => "Gateway ne confirm nahi kiya (status: " . ($gateway['status'] ?? 'unknown') . "). Approve nahi hua.",
+                'message' => "Gateway Status not Confirmed, Not Approved.",
             ];
         }
 
@@ -225,7 +225,7 @@ class PaymentController extends Controller
 
         return [
             'success' => true,
-            'message' => 'Gateway ne confirm kiya, payment approve ho gaya.',
+            'message' => 'Gateway Status Confirmed, Payment approved.',
         ];
     }
 
