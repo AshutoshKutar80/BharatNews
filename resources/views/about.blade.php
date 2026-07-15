@@ -404,7 +404,11 @@
 
             <div class="team-footer">
                 <p>And many more dedicated professionals working behind the scenes</p>
-                <a href="{{ url('/contact') }}" class="team-join-link">Join our team →</a>
+                @auth
+                    <a href="{{ route('services') }}" class="team-join-link">Join our team →</a>
+                @else
+                    <a href="{{ route('register') }}" class="team-join-link">Join our team →</a>
+                @endauth
             </div>
         </div>
     </section>

@@ -537,7 +537,9 @@ h4 {
   color: var(--navy);
 }
 
-/* ===== TICKER BAR ===== */
+/* ==========================================================================
+   TICKER BAR
+   ========================================================================== */
 .ticker-bar {
   background: var(--red);
   display: flex;
@@ -603,6 +605,55 @@ h4 {
 
   100% {
     transform: translateX(-50%);
+  }
+}
+
+/* ==========================================================================
+   TICKER BAR - MOBILE FIX
+   ========================================================================== */
+@media (max-width: 576px) {
+  .ticker-label {
+    padding: 8px 4px;
+    width: 130px;
+    font-size: 0.7rem;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .ticker-label .label-text {
+    font-size: 0.65rem;
+  }
+
+  .ticker-label::before {
+    width: 6px;
+    height: 6px;
+  }
+
+  .ticker-track {
+    animation: tickerScroll 10s linear infinite !important;
+    gap: 40px;
+    font-size: 0.78rem;
+    padding: 6px 0;
+  }
+}
+
+/* Extra Small Screens */
+@media (max-width: 400px) {
+  .ticker-label {
+    width: 100px;
+    padding: 6px 3px;
+    font-size: 0.6rem;
+  }
+
+  .ticker-label .label-text {
+    font-size: 0.55rem;
+  }
+
+  .ticker-track {
+    animation: tickerScroll 8s linear infinite !important;
+    gap: 30px;
+    font-size: 0.7rem;
+    padding: 5px 0;
   }
 }
 

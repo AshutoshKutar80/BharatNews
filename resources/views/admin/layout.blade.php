@@ -85,6 +85,18 @@
                     </span>
                     <span class="nav-label">Support</span>
                 </a>
+
+                <a href="{{ route('admin.news.index') }}"
+                    class="nav-item {{ request()->routeIs('admin.news.index') ? 'active' : '' }}">
+                    <span class="nav-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 5v14M5 12h14" />
+                            <rect x="3" y="3" width="18" height="18" rx="2" />
+                        </svg>
+                    </span>
+                    <span class="nav-label">News</span>
+                </a>
             </nav>
 
             <div class="admin-sidebar-footer">

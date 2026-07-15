@@ -7,6 +7,7 @@ use App\Models\State;
 use App\Models\TehsilList; // Changed to TehsilList
 use App\Models\Contact;
 use App\Models\Payment;
+use App\Models\News;
 use App\Models\TempPayment;
 use App\Models\PurchasedProduct;
 use Illuminate\Http\Request;
@@ -252,5 +253,70 @@ class UserController extends Controller
             });
 
         return view('user.products', compact('products'));
+    }
+
+    public function home()
+    {
+        $news = News::where('status', 'published')->with(['category', 'author'])->latest()->take(6)->get();
+
+        return view('home', compact('news'));
+    }
+
+    public function news(Request $request)
+    {
+        $query = News::where('status', 'published')
+            ->with(['category', 'author']);
+
+        // Filter by type
+        if ($request->has('type') && $request->type !== 'all') {
+            switch ($request->type) {
+                case 'breaking':
+                    $query->where('is_breaking', true);
+                    break;
+                case 'trending':
+                    $query->where('is_trending', true);
+                    break;
+                case 'featured':
+                    $query->where('is_featured', true);
+                    break;
+            }
+        }
+
+        $news = $query->latest()->paginate(12);
+
+        // Get counts for each type
+        $counts = [
+            'all' => News::where('status', 'published')->count(),
+            'breaking' => News::where('status', 'published')->where('is_breaking', true)->count(),
+            'trending' => News::where('status', 'published')->where('is_trending', true)->count(),
+            'featured' => News::where('status', 'published')->where('is_featured', true)->count(),
+        ];
+
+        $currentType = $request->get('type', 'all');
+
+        return view('news.index', compact('news', 'counts', 'currentType'));
+    }
+
+    /**
+     * Display the specified news article.
+     */
+    public function show($id)
+    {
+        $news = News::where('status', 'published')
+            ->with(['category', 'author'])
+            ->findOrFail($id);
+
+        // Increment view count
+        $news->increment('views');
+
+        // Get related news (same category)
+        $relatedNews = News::where('status', 'published')
+            ->where('category_id', $news->category_id)
+            ->where('id', '!=', $news->id)
+            ->latest()
+            ->take(4)
+            ->get();
+
+        return view('news.show', compact('news', 'relatedNews'));
     }
 }

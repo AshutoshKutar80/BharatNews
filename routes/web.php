@@ -6,6 +6,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\NewsController;
 use App\Http\Controllers\Admin\ContactController as AdminContactController;
 use App\Http\Middleware\RoleMiddleware;
 
@@ -14,11 +15,15 @@ use App\Http\Middleware\RoleMiddleware;
 // ============================================
 // PUBLIC PAGES
 // ============================================
-Route::view('/', 'home')->name('home');
 Route::view('/about', 'about')->name('about');
 Route::view('/services', 'services')->name('services');
+Route::get('/', [UserController::class, 'home'])->name('home');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+
+//news 
+Route::get('/news', [UserController::class, 'news'])->name('news.news');
+Route::get('/show/{id}', [UserController::class, 'show'])->name('news.show');
 
 // ============================================
 // POLICIES
@@ -115,6 +120,17 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('/ticket/messages/{id}', [TicketController::class, 'ticketMessages'])->name('ticket.messages');
         Route::post('/tickets/reply/{id}', [TicketController::class, 'ticketReply'])->name('ticket.reply');
         Route::post('/tickets/reply-close/{id}', [TicketController::class, 'ticketReplyClose'])->name('ticket.reply.close');
+
+        //news
+        Route::get('/news/index', [NewsController::class, 'index'])->name('news.index');
+        Route::get('/news/create', [NewsController::class, 'create'])->name('news.create');
+        Route::post('/news/store', [NewsController::class, 'store'])->name('news.store');
+        Route::get('/news/{news}', [NewsController::class, 'show'])->name('news.show');
+        Route::get('/news/{news}/edit', [NewsController::class, 'edit'])->name('news.edit');
+        Route::post('/news/update/{news}', [NewsController::class, 'update'])->name('news.update');
+        Route::post('/news/destroy/{news}', [NewsController::class, 'destroy'])->name('news.destroy');
+        Route::get('/news/subcategories/{category}', [NewsController::class, 'subcategoriesByCategory'])
+            ->name('news.subcategories');
 
         // logout
         Route::post('/logout', [UserController::class, 'logout'])->name('logout');

@@ -83,6 +83,23 @@
         </div>
 
         <nav class="sidebar-nav" aria-label="Mobile Navigation">
+
+            {{-- General Mobile Links (With Icons Added) --}}
+            <a href="{{ route('home') }}" class="{{ request()->is('/') ? 'active' : '' }}">
+                <i class="fas fa-home"></i> Home
+            </a>
+            <a href="{{ route('about') }}" class="{{ request()->is('about') ? 'active' : '' }}">
+                <i class="fas fa-info-circle"></i> About Us
+            </a>
+            <a href="{{ route('services') }}" class="{{ request()->is('services') ? 'active' : '' }}">
+                <i class="fas fa-concierge-bell"></i> Services
+            </a>
+            <a href="{{ route('contact') }}" class="{{ request()->is('contact') ? 'active' : '' }}">
+                <i class="fas fa-envelope"></i> Contact Us
+            </a>
+
+            <div class="sidebar-divider"></div>
+
             @auth
                 {{-- Logged In User Mobile Links (With Icons) --}}
                 <a href="{{ route('dashboard') }}"
@@ -120,22 +137,6 @@
                     <i class="fas fa-user-plus"></i> Register
                 </a>
             @endauth
-
-            <div class="sidebar-divider"></div>
-
-            {{-- General Mobile Links (With Icons Added) --}}
-            <a href="{{ route('home') }}" class="{{ request()->is('/') ? 'active' : '' }}">
-                <i class="fas fa-home"></i> Home
-            </a>
-            <a href="{{ route('about') }}" class="{{ request()->is('about') ? 'active' : '' }}">
-                <i class="fas fa-info-circle"></i> About Us
-            </a>
-            <a href="{{ route('services') }}" class="{{ request()->is('services') ? 'active' : '' }}">
-                <i class="fas fa-concierge-bell"></i> Services
-            </a>
-            <a href="{{ route('contact') }}" class="{{ request()->is('contact') ? 'active' : '' }}">
-                <i class="fas fa-envelope"></i> Contact Us
-            </a>
         </nav>
     </div>
 

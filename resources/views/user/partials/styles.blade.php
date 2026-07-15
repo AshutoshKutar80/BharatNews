@@ -1,9 +1,9 @@
 {{-- resources/views/user/partials/styles.blade.php --}}
 <style>
     .container {
-        max-width: 1200px;
+        /* max-width: 1200px;
         margin: 0 auto;
-        padding: 0 20px;
+        padding: 0 20px; */
     }
 
     /* ============ HERO ============ */

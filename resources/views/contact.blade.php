@@ -324,27 +324,38 @@ readonly
                             <label for="attachment"
                                 style="display: block; font-weight: 600; font-size: 14px; color: #333; margin-bottom: 6px;">Attach
                                 File (Optional)</label>
-                            <input type="file" id="attachment" name="attachment"
-                                style="width: 100%; padding: 12px; border: 2px dashed #e8e8e8; border-radius: 10px; font-size: 14px; cursor: pointer; background: #fafafa;"
-                                accept=".jpg,.jpeg,.png,.pdf,.doc,.docx">
-                            <p style="font-size: 12px; color: #aaa; margin-top: 5px;">Max file size: 5MB. Supported: JPG,
-                                PNG, PDF, DOC</p>
+                            <div class="file-upload-wrapper" style="position: relative;">
+                                <input type="file" id="attachment" name="attachment"
+                                    style="width: 100%; padding: 12px; border: 2px dashed #e8e8e8; border-radius: 10px; font-size: 14px; cursor: pointer; background: #fafafa; transition: all 0.3s;"
+                                    accept=".jpg,.jpeg,.png,.pdf" onchange="handleFileUpload(this)">
+                                <div id="fileInfo"
+                                    style="display: none; margin-top: 8px; padding: 8px 12px; background: #f0fdf4; border-radius: 8px; border: 1px solid #86efac;">
+                                    <span id="fileName" style="font-weight: 500; color: #065f46;"></span>
+                                    <span id="fileSize"
+                                        style="font-size: 12px; color: #64748b; margin-left: 8px;"></span>
+                                    <button type="button" onclick="removeFile()"
+                                        style="background: none; border: none; color: #ef4444; cursor: pointer; font-size: 16px; margin-left: 8px;">✕</button>
+                                </div>
+                            </div>
+                            <p style="font-size: 12px; color: #aaa; margin-top: 5px;">
+                                Max file size: 5MB. Supported: JPG, PNG, PDF
+                            </p>
                             <div class="error-message" id="attachmentError"
                                 style="color: #e74c3c; font-size: 13px; margin-top: 5px; display: none;"></div>
                         </div>
 
                         {{-- Privacy Checkbox --}}
                         <div style="grid-column: 1 / -1;">
-                            <label
-                                style="display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px; color: #555;">
-                                <input type="checkbox" id="privacy" name="privacy" value="1"
-                                    style="width: 18px; height: 18px; accent-color: #e74c3c;">
-                                I agree to the <a href="#"
-                                    style="color: #e74c3c; text-decoration: none; font-weight: 500;">Privacy Policy</a> and
-                                terms of service. <span style="color: #e74c3c;">*</span>
+                            <label class="privacy-label">
+                                <input type="checkbox" id="privacy" name="privacy" value="1">
+                                <span class="privacy-text">
+                                    I agree to the
+                                    <a href="#">Privacy Policy</a>
+                                    and terms of service.
+                                    <span class="required">*</span>
+                                </span>
                             </label>
-                            <div class="error-message" id="privacyError"
-                                style="color: #e74c3c; font-size: 13px; margin-top: 5px; display: none;"></div>
+                            <div class="error-message" id="privacyError"></div>
                         </div>
 
                         {{-- Submit Button --}}
@@ -370,6 +381,80 @@ readonly
 @endsection
 
 @push('styles')
+    <style>
+        .privacy-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #555;
+            max-width: 100%;
+        }
+
+        .privacy-label input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #e74c3c;
+            flex-shrink: 0;
+            margin-top: 2px;
+            cursor: pointer;
+        }
+
+        .privacy-text {
+            flex: 1;
+            word-wrap: break-word;
+            line-height: 1.5;
+        }
+
+        .privacy-text a {
+            color: #e74c3c;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .privacy-text a:hover {
+            text-decoration: underline;
+        }
+
+        .privacy-text .required {
+            color: #e74c3c;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 13px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 576px) {
+            .privacy-label {
+                font-size: 13px;
+                gap: 6px;
+            }
+
+            .privacy-label input[type="checkbox"] {
+                width: 15px;
+                height: 15px;
+                margin-top: 1px;
+            }
+        }
+
+        /* Extra Small Devices */
+        @media (max-width: 400px) {
+            .privacy-label {
+                font-size: 12px;
+                gap: 5px;
+            }
+
+            .privacy-label input[type="checkbox"] {
+                width: 14px;
+                height: 14px;
+            }
+        }
+    </style>
     <style>
         .reveal {
             opacity: 0;
@@ -412,6 +497,11 @@ readonly
             cursor: not-allowed !important;
         }
 
+        .file-upload-wrapper input[type="file"]:hover {
+            border-color: #e74c3c;
+            background: #fef2f2;
+        }
+
         @media (max-width: 768px) {
             .contact-wrap {
                 grid-template-columns: 1fr !important;
@@ -450,6 +540,7 @@ readonly
             // Get form elements
             const form = document.getElementById('contactForm');
             const submitBtn = document.getElementById('submitBtn');
+            const fileInput = document.getElementById('attachment');
 
             // Character counter for message
             const messageField = document.getElementById('message');
@@ -541,10 +632,10 @@ readonly
 
                 // Mobile validation
                 if (field.rules.includes('mobile') && value) {
-                    const mobileRegex = /^[0-9+\-\s()]{10,20}$/;
+                    const mobileRegex = /^[0-9]{10}$/;
                     if (!mobileRegex.test(value)) {
                         isValid = false;
-                        errorMsg = 'Please enter a valid mobile number.';
+                        errorMsg = 'Please enter a valid 10-digit mobile number.';
                     }
                 }
 
@@ -595,6 +686,58 @@ readonly
                 }
             });
 
+            // File upload handling
+            window.handleFileUpload = function(input) {
+                const file = input.files[0];
+                const errorDiv = document.getElementById('attachmentError');
+                const fileInfo = document.getElementById('fileInfo');
+                const fileName = document.getElementById('fileName');
+                const fileSize = document.getElementById('fileSize');
+
+                // Reset
+                errorDiv.style.display = 'none';
+                fileInfo.style.display = 'none';
+
+                if (file) {
+                    const validTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+                    const maxSize = 5 * 1024 * 1024; // 5MB
+
+                    // Validate file type
+                    if (!validTypes.includes(file.type)) {
+                        errorDiv.textContent = 'File must be JPG, PNG, or PDF';
+                        errorDiv.style.display = 'block';
+                        input.value = '';
+                        return;
+                    }
+
+                    // Validate file size
+                    if (file.size > maxSize) {
+                        errorDiv.textContent = 'File size must not exceed 5MB.';
+                        errorDiv.style.display = 'block';
+                        input.value = '';
+                        return;
+                    }
+
+                    // Show file info
+                    const sizeInKB = (file.size / 1024).toFixed(1);
+                    const sizeDisplay = sizeInKB > 1024 ? (sizeInKB / 1024).toFixed(1) + ' MB' : sizeInKB +
+                        ' KB';
+                    fileName.textContent = file.name;
+                    fileSize.textContent = '(' + sizeDisplay + ')';
+                    fileInfo.style.display = 'block';
+                    input.style.borderColor = '#86efac';
+                }
+            };
+
+            // Remove file
+            window.removeFile = function() {
+                const input = document.getElementById('attachment');
+                const fileInfo = document.getElementById('fileInfo');
+                input.value = '';
+                fileInfo.style.display = 'none';
+                input.style.borderColor = '#e8e8e8';
+            };
+
             // Form submission
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
@@ -606,6 +749,26 @@ readonly
                         allValid = false;
                     }
                 });
+
+                // Validate file if selected
+                const fileInput = document.getElementById('attachment');
+                if (fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    const validTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+                    const maxSize = 5 * 1024 * 1024;
+
+                    if (!validTypes.includes(file.type)) {
+                        allValid = false;
+                        document.getElementById('attachmentError').textContent =
+                            'File must be JPG, PNG, or PDF';
+                        document.getElementById('attachmentError').style.display = 'block';
+                    } else if (file.size > maxSize) {
+                        allValid = false;
+                        document.getElementById('attachmentError').textContent =
+                            'File size must not exceed 5MB.';
+                        document.getElementById('attachmentError').style.display = 'block';
+                    }
+                }
 
                 if (!allValid) {
                     // Scroll to first error
@@ -668,11 +831,13 @@ readonly
                                     field.element.classList.remove('success', 'error');
                                     field.error.style.display = 'none';
                                 } else {
-                                    // Keep readonly fields with their values and success class
                                     field.element.classList.add('success');
                                 }
                             });
                             charCount.textContent = '0 / 5000';
+                            // Reset file info
+                            document.getElementById('fileInfo').style.display = 'none';
+                            document.getElementById('attachment').style.borderColor = '#e8e8e8';
 
                             // Reset button
                             submitBtn.disabled = false;
@@ -729,31 +894,6 @@ readonly
                         Send Message
                     `;
                     });
-            });
-
-            // File input validation
-            const attachmentInput = document.getElementById('attachment');
-            attachmentInput.addEventListener('change', function() {
-                const file = this.files[0];
-                const errorDiv = document.getElementById('attachmentError');
-                if (file) {
-                    const validTypes = ['image/jpeg', 'image/png', 'application/pdf', 'application/msword',
-                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-                    ];
-                    const maxSize = 5 * 1024 * 1024; // 5MB
-
-                    if (!validTypes.includes(file.type)) {
-                        errorDiv.textContent = 'File must be JPG, PNG, PDF, or DOC.';
-                        errorDiv.style.display = 'block';
-                        this.value = '';
-                    } else if (file.size > maxSize) {
-                        errorDiv.textContent = 'File size must not exceed 5MB.';
-                        errorDiv.style.display = 'block';
-                        this.value = '';
-                    } else {
-                        errorDiv.style.display = 'none';
-                    }
-                }
             });
         });
     </script>

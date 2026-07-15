@@ -29,13 +29,24 @@
                     </svg>
                     Explore Services
                 </a>
-                <a href="#reporter" class="btn btn-outline">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        stroke-width="2">
-                        <path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2z" />
-                    </svg>
-                    Become a Reporter
-                </a>
+
+                @auth
+                    <a href="{{ url('/services') . '#reporter' }}" class="btn btn-outline">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2z" />
+                        </svg>
+                        Become a Reporter
+                    </a>
+                @else
+                    <a href="{{ route('register') }}" class="btn btn-outline">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2z" />
+                        </svg>
+                        Become a Reporter
+                    </a>
+                @endauth
             </div>
         </div>
         <!-- Decorative elements -->
@@ -470,20 +481,31 @@
                 <p class="cta-text">Join Bharat Integrity Forum News today and take your media journey to the next level.
                 </p>
                 <div class="cta-actions">
-                    <a href="#contact" class="btn btn-primary cta-btn">
+                    <a href="{{ route('contact') }}" class="btn btn-primary cta-btn">
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2">
                             <path d="M5 12h14M12 5l7 7-7 7" />
                         </svg>
                         Contact Us
                     </a>
-                    <a href="#reporter" class="btn btn-outline cta-btn">
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2">
-                            <path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2z" />
-                        </svg>
-                        Apply as Reporter
-                    </a>
+
+                    @auth
+                        <a href="{{ url('/services') }}" class="btn btn-outline cta-btn">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2z" />
+                            </svg>
+                            Apply as Reporter
+                        </a>
+                    @else
+                        <a href="{{ route('register') }}" class="btn btn-outline cta-btn">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2z" />
+                            </svg>
+                            Apply as Reporter
+                        </a>
+                    @endauth
                 </div>
             </div>
         </div>
