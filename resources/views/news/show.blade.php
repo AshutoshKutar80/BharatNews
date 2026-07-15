@@ -184,7 +184,7 @@
 
         .related-card img {
             width: 100%;
-            /* height: 120px; */
+            height: 140px;
             object-fit: cover;
         }
 

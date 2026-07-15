@@ -136,7 +136,7 @@
 
             <main class="admin-content">
 
-                @if (session('success'))
+                {{-- @if (session('success'))
                     <div class="alert alert-success">✅ {{ session('success') }}</div>
                 @endif
                 @if (session('error'))
@@ -146,7 +146,7 @@
                     <div class="alert alert-error">
                         ⚠️ {{ $errors->first() }}
                     </div>
-                @endif
+                @endif --}}
 
                 @yield('content')
 

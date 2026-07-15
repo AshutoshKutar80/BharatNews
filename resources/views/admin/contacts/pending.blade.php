@@ -397,7 +397,7 @@
         </a>
         <a href="{{ route('admin.contacts.replied') }}">
             ✅ Replied
-            <span class="badge-count">{{ $contacts->where('status', 'replied')->count() }}</span>
+            <span class="badge-count">{{ $repliedCount }}</span>
         </a>
     </div>
 

@@ -129,8 +129,8 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('/news/{news}/edit', [NewsController::class, 'edit'])->name('news.edit');
         Route::post('/news/update/{news}', [NewsController::class, 'update'])->name('news.update');
         Route::post('/news/destroy/{news}', [NewsController::class, 'destroy'])->name('news.destroy');
-        Route::get('/news/subcategories/{category}', [NewsController::class, 'subcategoriesByCategory'])
-            ->name('news.subcategories');
+        Route::get('/news/subcategories/{category}', [NewsController::class, 'subcategoriesByCategory'])->name('news.subcategories');
+        Route::get('/news/search', [NewsController::class, 'index'])->name('news.search');
 
         // logout
         Route::post('/logout', [UserController::class, 'logout'])->name('logout');

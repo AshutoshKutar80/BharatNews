@@ -7,8 +7,8 @@
 @section('content')
     <style>
         /* ============================================================
-                                   PAGE SPECIFIC STYLES - Only affects this page
-                                   ============================================================ */
+                   PAGE SPECIFIC STYLES - Only affects this page
+                ============================================================ */
 
         .admin-content {
             padding: 24px;
@@ -19,8 +19,134 @@
         .page-toolbar {
             display: flex;
             align-items: center;
-            justify-content: flex-end;
+            justify-content: space-between;
             margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .page-toolbar-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            flex-wrap: wrap;
+        }
+
+        /* Search Box Styles */
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 0 12px;
+            transition: all 0.2s ease;
+            flex: 1;
+            min-width: 200px;
+            max-width: 350px;
+        }
+
+        .search-box:focus-within {
+            border-color: #0f172a;
+            box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.1);
+        }
+
+        .search-box .search-icon {
+            color: #94a3b8;
+            font-size: 16px;
+            margin-right: 8px;
+        }
+
+        .search-box input {
+            border: none;
+            padding: 10px 0;
+            font-size: 14px;
+            color: #1e293b;
+            width: 100%;
+            outline: none;
+            background: transparent;
+        }
+
+        .search-box input::placeholder {
+            color: #94a3b8;
+        }
+
+        .search-box .clear-search {
+            display: none;
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            padding: 4px;
+            font-size: 16px;
+            transition: color 0.2s ease;
+        }
+
+        .search-box .clear-search:hover {
+            color: #ef4444;
+        }
+
+        .search-box .clear-search.visible {
+            display: block;
+        }
+
+        /* Filter Dropdown Styles */
+        .filter-wrapper {
+            position: relative;
+            min-width: 150px;
+        }
+
+        .filter-select {
+            appearance: none;
+            -webkit-appearance: none;
+            padding: 10px 38px 10px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #1e293b;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+            min-width: 150px;
+        }
+
+        .filter-select:hover {
+            border-color: #94a3b8;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #0f172a;
+            box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.1);
+        }
+
+        .filter-wrapper .filter-icon {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            pointer-events: none;
+            font-size: 12px;
+        }
+
+        .filter-select option {
+            padding: 8px;
+        }
+
+        .filter-select option:checked {
+            background: #0f172a;
+            color: white;
+        }
+
+        /* Filter Badge Counts in Dropdown */
+        .filter-option-with-count {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .btn-primary-add {
@@ -35,6 +161,7 @@
             align-items: center;
             gap: 8px;
             transition: all 0.2s ease;
+            white-space: nowrap;
         }
 
         .btn-primary-add:hover {
@@ -72,6 +199,82 @@
             font-size: 18px;
             font-weight: 600;
             color: #0f172a;
+        }
+
+        .panel-head .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .badge-status {
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .badge-status.draft {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-status.published {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-status.total {
+            background: #e2e8f0;
+            color: #475569;
+        }
+
+        .badge-status.breaking {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .badge-status.trending {
+            background: #ede9fe;
+            color: #6d28d9;
+        }
+
+        .badge-status.featured {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .search-results-info {
+            font-size: 14px;
+            color: #64748b;
+            padding: 12px 24px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .search-results-info strong {
+            color: #0f172a;
+        }
+
+        .search-results-info .clear-filters {
+            color: #ef4444;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 13px;
+            padding: 4px 12px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .search-results-info .clear-filters:hover {
+            background: #fee2e2;
         }
 
         .panel-body {
@@ -113,6 +316,7 @@
 
         .thumb-cell img {
             width: 56px;
+            height: 56px;
             object-fit: cover;
             border-radius: 8px;
             border: 1px solid #e2e8f0;
@@ -259,15 +463,42 @@
             margin-bottom: 12px;
         }
 
+        .empty-state .empty-actions {
+            margin-top: 20px;
+        }
+
+        .empty-state .empty-actions a {
+            display: inline-block;
+            padding: 10px 24px;
+            background: #0f172a;
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .empty-state .empty-actions a:hover {
+            background: #1e293b;
+            transform: translateY(-1px);
+        }
+
         .pagination-wrap {
             padding: 16px 24px;
             border-top: 1px solid #e2e8f0;
             background: #f8fafc;
             border-radius: 0 0 12px 12px;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
             flex-shrink: 0;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .pagination-wrap .pagination-info {
+            font-size: 14px;
+            color: #64748b;
         }
 
         .pagination-wrap .pagination {
@@ -316,8 +547,8 @@
         }
 
         /* ============================================================
-                                   VIEW DETAILS MODAL
-                                   ============================================================ */
+               VIEW DETAILS MODAL
+               ============================================================ */
 
         .modal-overlay {
             display: none;
@@ -501,8 +732,8 @@
         }
 
         /* ============================================================
-                                   RESPONSIVE
-                                   ============================================================ */
+               RESPONSIVE
+               ============================================================ */
 
         @media (min-width: 577px) and (max-width: 991px) {
             .admin-table {
@@ -517,6 +748,14 @@
             .cell-title {
                 max-width: 180px;
             }
+
+            .search-box {
+                max-width: 250px;
+            }
+
+            .filter-wrapper {
+                min-width: 130px;
+            }
         }
 
         @media (max-width: 576px) {
@@ -525,7 +764,27 @@
             }
 
             .page-toolbar {
-                justify-content: stretch;
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .page-toolbar-left {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .search-box {
+                max-width: 100%;
+                width: 100%;
+            }
+
+            .filter-wrapper {
+                width: 100%;
+                min-width: unset;
+            }
+
+            .filter-select {
+                width: 100%;
             }
 
             .page-toolbar .btn-primary-add {
@@ -602,25 +861,118 @@
             .modal-meta-grid {
                 grid-template-columns: 1fr;
             }
+
+            .pagination-wrap {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .search-results-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
     </style>
 
+    <!-- Page Toolbar with Search and Filter -->
     <div class="page-toolbar">
+        <div class="page-toolbar-left">
+            <!-- Search Box -->
+            <form method="GET" action="{{ route('admin.news.index') }}" class="search-box" id="searchForm">
+                <span class="search-icon">🔍</span>
+                <input type="text" name="search" id="searchInput" placeholder="Search news..."
+                    value="{{ request('search') }}" autocomplete="off">
+                <button type="button" class="clear-search {{ request('search') ? 'visible' : '' }}" id="clearSearch"
+                    title="Clear search">
+                    ✕
+                </button>
+            </form>
+
+            <!-- Filter Dropdown -->
+            <form method="GET" action="{{ route('admin.news.index') }}" id="filterForm">
+                @if (request('search'))
+                    <input type="hidden" name="search" value="{{ request('search') }}">
+                @endif
+                <div class="filter-wrapper">
+                    <select name="filter" class="filter-select" id="filterSelect">
+                        <option value="all" {{ $currentFilter == 'all' ? 'selected' : '' }}>
+                            📋 All ({{ $counts['all'] }})
+                        </option>
+                        <option value="draft" {{ $currentFilter == 'draft' ? 'selected' : '' }}>
+                            📝 Draft ({{ $counts['draft'] }})
+                        </option>
+                        <option value="published" {{ $currentFilter == 'published' ? 'selected' : '' }}>
+                            ✅ Published ({{ $counts['published'] }})
+                        </option>
+                        <option value="breaking" {{ $currentFilter == 'breaking' ? 'selected' : '' }}>
+                            🔴 Breaking ({{ $counts['breaking'] }})
+                        </option>
+                        <option value="trending" {{ $currentFilter == 'trending' ? 'selected' : '' }}>
+                            📈 Trending ({{ $counts['trending'] }})
+                        </option>
+                        <option value="featured" {{ $currentFilter == 'featured' ? 'selected' : '' }}>
+                            ⭐ Featured ({{ $counts['featured'] }})
+                        </option>
+                    </select>
+                    <span class="filter-icon">▼</span>
+                </div>
+            </form>
+        </div>
         <a href="{{ route('admin.news.create') }}" class="btn-primary-add">
             ➕ Add News
         </a>
     </div>
 
+    <!-- Panel -->
     <div class="panel">
         <div class="panel-head">
             <h3>📰 All News</h3>
-            <span class="badge-status published">{{ $news->total() }} total</span>
+            <div class="header-right">
+                @if (request('search') || (request('filter') && request('filter') != 'all'))
+                    <span class="badge-status total">{{ $news->total() }} results found</span>
+                @endif
+                <span class="badge-status total">{{ $news->total() }} total</span>
+            </div>
         </div>
+
+        @if ((request('search') || (request('filter') && request('filter') != 'all')) && $news->total() > 0)
+            <div class="search-results-info">
+                <span>
+                    @if (request('search'))
+                        Showing results for: <strong>"{{ request('search') }}"</strong>
+                    @endif
+                    @if (request('filter') && request('filter') != 'all')
+                        @if (request('search'))
+                            |
+                        @endif
+                        Filter: <strong>{{ ucfirst(request('filter')) }}</strong>
+                    @endif
+                    <span style="margin-left: 8px; color: #94a3b8;">
+                        ({{ $news->firstItem() ?? 0 }} - {{ $news->lastItem() ?? 0 }} of {{ $news->total() }})
+                    </span>
+                </span>
+                <a href="{{ route('admin.news.index') }}" class="clear-filters">✕ Clear Filters</a>
+            </div>
+        @endif
+
         <div class="panel-body">
             @if ($news->isEmpty())
                 <div class="empty-state">
                     <div class="ic">📭</div>
-                    No news articles found.
+                    @if (request('search') || (request('filter') && request('filter') != 'all'))
+                        <h3>No results found</h3>
+                        <p>Try adjusting your search terms or filters to find what you're looking for.</p>
+                        <div class="empty-actions">
+                            <a href="{{ route('admin.news.index') }}">Clear All Filters</a>
+                        </div>
+                    @else
+                        <h3>No news articles found</h3>
+                        <p>Start by adding your first news article.</p>
+                        <div class="empty-actions">
+                            <a href="{{ route('admin.news.create') }}">➕ Add News</a>
+                        </div>
+                    @endif
                 </div>
             @else
                 <table class="admin-table">
@@ -690,7 +1042,6 @@
                                             data-confirm="Delete the article &quot;{{ $item->title }}&quot;? This cannot be undone."
                                             style="display:inline;">
                                             @csrf
-                                            @method('DELETE')
                                             <button type="submit" class="btn-sm btn-delete">🗑 Delete</button>
                                         </form>
                                     </div>
@@ -701,8 +1052,12 @@
                 </table>
             @endif
         </div>
+
         @if ($news->hasPages())
             <div class="pagination-wrap">
+                <div class="pagination-info">
+                    Showing {{ $news->firstItem() ?? 0 }} to {{ $news->lastItem() ?? 0 }} of {{ $news->total() }} results
+                </div>
                 {{ $news->links('pagination::bootstrap-5') }}
             </div>
         @endif
@@ -724,6 +1079,51 @@
     @push('scripts')
         <script>
             document.addEventListener('DOMContentLoaded', function() {
+                // ---- Search functionality ----
+                const searchInput = document.getElementById('searchInput');
+                const searchForm = document.getElementById('searchForm');
+                const clearSearch = document.getElementById('clearSearch');
+
+                // Auto-submit on typing (with debounce)
+                let searchTimeout;
+                searchInput.addEventListener('input', function() {
+                    clearTimeout(searchTimeout);
+
+                    // Show/hide clear button
+                    if (this.value.length > 0) {
+                        clearSearch.classList.add('visible');
+                    } else {
+                        clearSearch.classList.remove('visible');
+                    }
+
+                    searchTimeout = setTimeout(() => {
+                        searchForm.submit();
+                    }, 500);
+                });
+
+                // Clear search
+                clearSearch.addEventListener('click', function() {
+                    searchInput.value = '';
+                    this.classList.remove('visible');
+                    searchForm.submit();
+                });
+
+                // Submit on Enter key
+                searchInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        searchForm.submit();
+                    }
+                });
+
+                // ---- Filter functionality ----
+                const filterSelect = document.getElementById('filterSelect');
+                const filterForm = document.getElementById('filterForm');
+
+                filterSelect.addEventListener('change', function() {
+                    filterForm.submit();
+                });
+
                 // ---- Delete confirmation ----
                 document.querySelectorAll('form[data-confirm]').forEach(form => {
                     form.addEventListener('submit', function(e) {
@@ -747,7 +1147,6 @@
                     return div.innerHTML;
                 }
 
-                // Get scrollbar width
                 function getScrollbarWidth() {
                     return window.innerWidth - document.documentElement.clientWidth;
                 }
@@ -758,7 +1157,6 @@
                     scrollbarWidth = getScrollbarWidth();
                     overlay.classList.add('active');
                     document.body.style.overflow = 'hidden';
-                    // Add padding to prevent content shift
                     document.body.style.paddingRight = scrollbarWidth + 'px';
                 }
 
@@ -785,9 +1183,9 @@
 
                     if (flagsHtml || data.status) {
                         html += `<div class="flag-row" style="margin-bottom:16px;">
-                        <span class="badge-status ${data.status}">${escapeHtml((data.status || '').replace(/^\w/, c => c.toUpperCase()))}</span>
-                        ${flagsHtml}
-                    </div>`;
+                            <span class="badge-status ${data.status}">${escapeHtml((data.status || '').replace(/^\w/, c => c.toUpperCase()))}</span>
+                            ${flagsHtml}
+                        </div>`;
                     }
 
                     html += '<div class="modal-meta-grid">';
@@ -827,9 +1225,9 @@
                 function metaItem(label, value) {
                     if (!value && value !== 0) return '';
                     return `<div class="modal-meta-item">
-                    <div class="lbl">${label}</div>
-                    <div class="val">${escapeHtml(String(value))}</div>
-                </div>`;
+                        <div class="lbl">${label}</div>
+                        <div class="val">${escapeHtml(String(value))}</div>
+                    </div>`;
                 }
 
                 document.querySelectorAll('.js-view-news').forEach(btn => {

@@ -7,8 +7,8 @@
 @section('content')
     <style>
         /* ============================================================
-               PAGE SPECIFIC STYLES - Only affects this page
-               ============================================================ */
+                   PAGE SPECIFIC STYLES - Only affects this page
+                   ============================================================ */
 
         /* Ensure content takes full height and scrolls properly */
         .admin-content {
@@ -383,8 +383,8 @@
         }
 
         /* ============================================================
-                       RESPONSIVE
-                       ============================================================ */
+                           RESPONSIVE
+                           ============================================================ */
 
         /* Tablet */
         @media (min-width: 577px) and (max-width: 991px) {
@@ -550,7 +550,7 @@
         <a href="{{ route('admin.contacts.replied') }}"
             class="{{ request()->routeIs('admin.contacts.replied') ? 'active' : '' }}">
             ✅ Replied
-            <span class="badge-count">{{ $contacts->where('status', 'replied')->count() }}</span>
+            <span class="badge-count">{{ $repliedCount }}</span>
         </a>
     </div>
 

@@ -191,7 +191,6 @@
             position: relative;
             overflow: hidden;
             background: #f8fafc;
-            height: 220px;
         }
 
         .news-thumb img {

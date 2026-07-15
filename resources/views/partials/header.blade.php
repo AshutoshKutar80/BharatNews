@@ -151,17 +151,43 @@
         </div>
         <div class="ticker-wrap">
             <div class="ticker-track">
+                <!-- header.blade.php -->
                 @php
-                    $headlines = [
-                        '🚀 Bharat Integrity Forum News is now expanding to your city — apply to become a reporter today.',
-                        '⚡ Truth, impartiality and trustworthiness — that\'s our identity.',
-                        '📰 Accurate, verified news from across the nation, all in one place.',
-                        '🎯 Empowering citizen journalism with integrity and transparency.',
-                    ];
+                    $breakingHeadlines = App\Models\News::where('status', 'published')
+                        ->where('is_breaking', true)
+                        ->latest()
+                        ->take(10)
+                        ->get();
+
+                    if ($breakingHeadlines->isEmpty()) {
+                        $breakingHeadlines = collect([
+                            (object) [
+                                'id' => null,
+                                'title' =>
+                                    '🚀 Bharat Integrity Forum News is now expanding to your city — apply to become a reporter today.',
+                            ],
+                            (object) [
+                                'id' => null,
+                                'title' => '⚡ Truth, impartiality and trustworthiness — that\'s our identity.',
+                            ],
+                            (object) [
+                                'id' => null,
+                                'title' => '📰 Accurate, verified news from across the nation, all in one place.',
+                            ],
+                            (object) [
+                                'id' => null,
+                                'title' => '🎯 Empowering citizen journalism with integrity and transparency.',
+                            ],
+                        ]);
+                    }
                 @endphp
-                {{-- Loop twice for infinite scrolling effect --}}
-                @foreach (array_merge($headlines, $headlines) as $line)
-                    <span>{{ $line }}</span>
+
+                @foreach ($breakingHeadlines as $item)
+                    <a href="{{ $item->id ? route('news.show', $item->id) : '#' }}"
+                        style="color: white; text-decoration: none; margin-right: 20px;">
+                        <span style="margin-right: 5px; ">●</span>
+                        {{ $item->title }}
+                    </a>
                 @endforeach
             </div>
         </div>

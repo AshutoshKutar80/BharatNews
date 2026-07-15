@@ -14,13 +14,70 @@ class NewsController extends Controller
     /**
      * Display listing
      */
-    public function index()
+    public function index(Request $request)
     {
-        $news = News::with(['category', 'subcategory', 'author'])
-            ->latest()
-            ->paginate(10);
+        $query = News::with(['category', 'subcategory', 'author']);
 
-        return view('admin.news.index', compact('news'));
+        // Search functionality
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'LIKE', "%{$search}%")
+                    ->orWhere('content', 'LIKE', "%{$search}%")
+                    ->orWhere('tags', 'LIKE', "%{$search}%")
+                    ->orWhereHas('category', function ($cat) use ($search) {
+                        $cat->where('name', 'LIKE', "%{$search}%");
+                    })
+                    ->orWhereHas('author', function ($auth) use ($search) {
+                        $auth->where('name', 'LIKE', "%{$search}%");
+                    });
+            });
+        }
+
+        // Filter functionality
+        if ($request->has('filter') && !empty($request->filter) && $request->filter !== 'all') {
+            switch ($request->filter) {
+                case 'draft':
+                    $query->where('status', 'draft');
+                    break;
+                case 'published':
+                    $query->where('status', 'published');
+                    break;
+                case 'breaking':
+                    $query->where('is_breaking', true);
+                    break;
+                case 'trending':
+                    $query->where('is_trending', true);
+                    break;
+                case 'featured':
+                    $query->where('is_featured', true);
+                    break;
+            }
+        }
+
+        $news = $query->latest()->paginate(6);
+
+        // Preserve search and filter in pagination
+        if ($request->has('search')) {
+            $news->appends(['search' => $request->search]);
+        }
+        if ($request->has('filter')) {
+            $news->appends(['filter' => $request->filter]);
+        }
+
+        // Get counts for filter badges
+        $counts = [
+            'all' => News::count(),
+            'draft' => News::where('status', 'draft')->count(),
+            'published' => News::where('status', 'published')->count(),
+            'breaking' => News::where('is_breaking', true)->count(),
+            'trending' => News::where('is_trending', true)->count(),
+            'featured' => News::where('is_featured', true)->count(),
+        ];
+
+        $currentFilter = $request->get('filter', 'all');
+
+        return view('admin.news.index', compact('news', 'counts', 'currentFilter'));
     }
 
     /**

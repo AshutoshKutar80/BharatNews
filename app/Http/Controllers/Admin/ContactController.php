@@ -20,9 +20,10 @@ class ContactController extends Controller
     {
         $contacts = Contact::latest()->paginate(5);
         $pendingCount = Contact::pending()->count();
+        $repliedCount = Contact::where('status', 'replied')->count();
         $totalCount = Contact::count();
 
-        return view('admin.contacts.index', compact('contacts', 'pendingCount', 'totalCount'));
+        return view('admin.contacts.index', compact('contacts', 'pendingCount', 'totalCount', 'repliedCount'));
     }
 
     /**
@@ -32,9 +33,10 @@ class ContactController extends Controller
     {
         $contacts = Contact::pending()->latest()->paginate(5);
         $pendingCount = Contact::pending()->count();
+        $repliedCount = Contact::where('status', 'replied')->count();
         $totalCount = Contact::count();
 
-        return view('admin.contacts.pending', compact('contacts', 'pendingCount', 'totalCount'));
+        return view('admin.contacts.pending', compact('contacts', 'pendingCount', 'totalCount', 'repliedCount'));
     }
 
     /**

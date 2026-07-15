@@ -258,8 +258,13 @@
     </style>
 
     <div class="form-panel">
-        <div class="form-panel-head">
-            <h3>📝 Article Details</h3>
+        <div class="form-panel-head d-flex justify-content-between align-items-center">
+            <h3 class="mb-0">📝 Article Details</h3>
+            <div>
+                <a href="{{ route('admin.news.index') }}" class="btn btn-secondary btn-sm text-decoration-none">
+                    ← Back to News
+                </a>
+            </div>
         </div>
         <div class="form-panel-body">
             <form method="POST" action="{{ route('admin.news.store') }}" enctype="multipart/form-data" id="newsForm"

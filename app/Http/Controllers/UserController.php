@@ -314,7 +314,7 @@ class UserController extends Controller
             ->where('category_id', $news->category_id)
             ->where('id', '!=', $news->id)
             ->latest()
-            ->take(4)
+            ->take(2)
             ->get();
 
         return view('news.show', compact('news', 'relatedNews'));

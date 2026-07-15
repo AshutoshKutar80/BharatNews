@@ -294,7 +294,12 @@
     <div class="form-panel">
         <div class="form-panel-head">
             <h3>📝 Article Details</h3>
-            <span class="badge-status {{ $news->status }}">{{ ucfirst($news->status) }}</span>
+            <div>
+                <span class="badge-status {{ $news->status }}">{{ ucfirst($news->status) }} </span>
+                <a href="{{ route('admin.news.index') }}" class="btn btn-secondary btn-sm text-decoration-none">
+                    ← Back
+                </a>
+            </div>
         </div>
         <div class="form-panel-body">
             <form method="POST" action="{{ route('admin.news.update', $news->id) }}" enctype="multipart/form-data"
