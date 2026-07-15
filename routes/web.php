@@ -6,7 +6,8 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\TicketController;
-use App\Http\Controllers\NewsController;
+use App\Http\Controllers\NewsController as UserNewsController;
+use App\Http\Controllers\Admin\NewsController as AdminNewsController;
 use App\Http\Controllers\Admin\ContactController as AdminContactController;
 use App\Http\Middleware\RoleMiddleware;
 
@@ -17,13 +18,13 @@ use App\Http\Middleware\RoleMiddleware;
 // ============================================
 Route::view('/about', 'about')->name('about');
 Route::view('/services', 'services')->name('services');
-Route::get('/', [UserController::class, 'home'])->name('home');
+Route::get('/', [UserNewsController::class, 'home'])->name('home');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
 //news 
-Route::get('/news', [UserController::class, 'news'])->name('news.news');
-Route::get('/show/{id}', [UserController::class, 'show'])->name('news.show');
+Route::get('/news', [UserNewsController::class, 'news'])->name('news.news');
+Route::get('/show/{id}', [UserNewsController::class, 'show'])->name('news.show');
 
 // ============================================
 // POLICIES
@@ -122,15 +123,15 @@ Route::middleware(['auth', 'role:admin'])
         Route::post('/tickets/reply-close/{id}', [TicketController::class, 'ticketReplyClose'])->name('ticket.reply.close');
 
         //news
-        Route::get('/news/index', [NewsController::class, 'index'])->name('news.index');
-        Route::get('/news/create', [NewsController::class, 'create'])->name('news.create');
-        Route::post('/news/store', [NewsController::class, 'store'])->name('news.store');
-        Route::get('/news/{news}', [NewsController::class, 'show'])->name('news.show');
-        Route::get('/news/{news}/edit', [NewsController::class, 'edit'])->name('news.edit');
-        Route::post('/news/update/{news}', [NewsController::class, 'update'])->name('news.update');
-        Route::post('/news/destroy/{news}', [NewsController::class, 'destroy'])->name('news.destroy');
-        Route::get('/news/subcategories/{category}', [NewsController::class, 'subcategoriesByCategory'])->name('news.subcategories');
-        Route::get('/news/search', [NewsController::class, 'index'])->name('news.search');
+        Route::get('/news/index', [AdminNewsController::class, 'index'])->name('news.index');
+        Route::get('/news/create', [AdminNewsController::class, 'create'])->name('news.create');
+        Route::post('/news/store', [AdminNewsController::class, 'store'])->name('news.store');
+        Route::get('/news/{news}', [AdminNewsController::class, 'show'])->name('news.show');
+        Route::get('/news/{news}/edit', [AdminNewsController::class, 'edit'])->name('news.edit');
+        Route::post('/news/update/{news}', [AdminNewsController::class, 'update'])->name('news.update');
+        Route::post('/news/destroy/{news}', [AdminNewsController::class, 'destroy'])->name('news.destroy');
+        Route::get('/news/subcategories/{category}', [AdminNewsController::class, 'subcategoriesByCategory'])->name('news.subcategories');
+        Route::get('/news/search', [AdminNewsController::class, 'index'])->name('news.search');
 
         // logout
         Route::post('/logout', [UserController::class, 'logout'])->name('logout');
