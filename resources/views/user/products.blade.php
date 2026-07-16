@@ -77,8 +77,8 @@
                                 </div>
                             </div>
 
-                            @if (!empty($product->remark))
-                                <p class="up-product-remark"><strong>Remark:</strong> {{ $product->remark }}</p>
+                            @if (!empty($product->admin_remark))
+                                <p class="up-product-remark"><strong>Remark:</strong> {{ $product->admin_remark }}</p>
                             @endif
                         </div>
                     @endforeach

@@ -61,6 +61,7 @@
                         <li> <a href="{{ route('register') }}">Become a Reporter</a></li>
                     @endauth
                     <li><a href="{{ route('contact') }}">Contact Us</a></li>
+                    <li><a href="{{ route('news.news') }}">All News</a></li>
                 </ul>
             </div>
 
