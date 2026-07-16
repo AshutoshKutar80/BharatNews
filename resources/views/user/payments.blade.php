@@ -39,7 +39,9 @@
                             <thead>
                                 <tr>
                                     <th>Product</th>
-                                    <th>Amount</th>
+                                    <th>Product Amount</th>
+                                    <th>GST</th>
+                                    <th>Total Amount</th>
                                     <th>Txn Ref</th>
                                     <th>Status</th>
                                     <th>Date</th>
@@ -48,8 +50,11 @@
                             <tbody>
                                 @foreach ($payments as $row)
                                     <tr>
+                                        {{-- {{ dd($row->toArray()) }} --}}
                                         <td data-label="Product">{{ $row->product_name }}</td>
                                         <td data-label="Amount">₹{{ number_format((float) $row->amount, 2) }}</td>
+                                        <td data-label="Amount">₹{{ number_format((float) $row->gst_amount, 2) }}</td>
+                                        <td data-label="Amount">₹{{ number_format((float) $row->total_amount, 2) }}</td>
                                         <td data-label="Txn Ref">{{ $row->txn_ref ?? '—' }}</td>
                                         <td data-label="Status">
                                             <span class="up-pill up-pill-success">{{ ucfirst($row->status) }}</span>

@@ -11,13 +11,11 @@ use App\Http\Controllers\Admin\NewsController as AdminNewsController;
 use App\Http\Controllers\Admin\ContactController as AdminContactController;
 use App\Http\Middleware\RoleMiddleware;
 
-
-
 // ============================================
 // PUBLIC PAGES
 // ============================================
-Route::view('/about', 'about')->name('about');
-Route::view('/services', 'services')->name('services');
+Route::view('/about', 'pages.about')->name('about');
+Route::view('/services', 'pages.services')->name('services');
 Route::get('/', [UserNewsController::class, 'home'])->name('home');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
@@ -45,6 +43,14 @@ Route::get('/get-tehsils/{district}', [UserController::class, 'getTehsils']);
 Route::get('/login', [UserController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [UserController::class, 'login'])->name('login.store');
 
+// ============================================
+// PAYMENT ROUTES - PUBLIC ACCESS
+// ============================================
+Route::get('/payment/check-auth', [PaymentController::class, 'checkAuth'])->name('payment.check-auth');
+Route::get('/payment/callback', [PaymentController::class, 'callback'])->name('payment.callback');
+Route::get('/payment/success', [PaymentController::class, 'success'])->name('payment.success');
+Route::get('/payment/failed', [PaymentController::class, 'failed'])->name('payment.failed');
+
 
 // ============================================
 // USER DASHBOARD (Protected)
@@ -53,11 +59,10 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
     Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
-    // Payment - sirf 2 core routes: callback (Cashfree redirect yahin aata hai) + status pages
+    // Payment routes - protected (only logged in users can initiate)
+    Route::get('/payment/upgrade-info', [PaymentController::class, 'getUpgradeInfo'])->name('payment.upgrade-info');
     Route::post('/payment/initiate', [PaymentController::class, 'initiate'])->name('payment.initiate');
-    Route::get('/payment/callback', [PaymentController::class, 'callback'])->name('payment.callback');
-    Route::get('/payment/success', [PaymentController::class, 'success'])->name('payment.success');
-    Route::get('/payment/failed', [PaymentController::class, 'failed'])->name('payment.failed');
+    Route::get('/payment/status/{orderId}', [PaymentController::class, 'getPaymentStatus'])->name('payment.status');
 
     Route::get('/profile', [UserController::class, 'profile'])->name('profile');
     Route::get('/my-contacts', [UserController::class, 'contacts'])->name('user.contacts');
@@ -71,7 +76,6 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/support/show/{id}', [TicketController::class, 'show'])->name('ticket.show');
     Route::get('/support/latest-messages/{ticket}', [TicketController::class, 'latestMessages']);
 });
-
 
 // ============================================
 // ADMIN PANEL

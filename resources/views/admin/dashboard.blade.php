@@ -44,10 +44,24 @@
             </div>
         </div>
         <div class="stat-card">
-            <div class="ic">💰</div>
+            <div class="ic">🏷️</div> <!-- Price Tag -->
             <div>
-                <div class="num">₹{{ number_format($stats['revenue'], 0) }}</div>
-                <div class="lbl">Total Revenue</div>
+                <div class="num">₹{{ number_format($stats['product_amount'], 0) }}</div>
+                <div class="lbl">Product Amount</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="ic">🧾</div> <!-- Receipt/Invoice -->
+            <div>
+                <div class="num">₹{{ number_format($stats['gst'], 0) }}</div>
+                <div class="lbl">GST (18%)</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="ic">💵</div> <!-- Money/Bill -->
+            <div>
+                <div class="num">₹{{ number_format($stats['total_amount'], 0) }}</div>
+                <div class="lbl">Total Amount</div>
             </div>
         </div>
         <div class="stat-card">
@@ -120,7 +134,9 @@
                         <tr>
                             <th>User</th>
                             <th>Product</th>
-                            <th>Amount</th>
+                            <th>Product Amount</th>
+                            <th>GST</th>
+                            <th>Total Amount</th>
                             <th>Txn Ref</th>
                             <th>Paid At</th>
                         </tr>
@@ -131,6 +147,8 @@
                                 <td class="cell-name" data-label="User">{{ $p->user_name }}</td>
                                 <td data-label="Product">{{ $p->product_type }}</td>
                                 <td data-label="Amount">₹{{ number_format($p->amount, 0) }}</td>
+                                <td data-label="Amount">₹{{ number_format($p->gst_amount, 0) }}</td>
+                                <td data-label="Amount">₹{{ number_format($p->total_amount, 0) }}</td>
                                 <td data-label="Txn Ref">{{ $p->txn_ref }}</td>
                                 <td data-label="Paid At">{{ optional($p->paid_at)->format('d M Y, h:i A') }}</td>
                             </tr>
@@ -148,7 +166,7 @@
         /* ---------- Stat cards: responsive grid ---------- */
         .stat-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 16px;
         }
 
@@ -156,7 +174,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            min-width: 0;
+            width: 180 !important;
             /* prevent overflow inside grid */
         }
 

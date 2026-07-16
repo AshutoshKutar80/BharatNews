@@ -30,7 +30,7 @@ class UserController extends Controller
             ->orderBy('states')
             ->pluck('states');
 
-        return view('user.register', compact('states'));
+        return view('register', compact('states'));
     }
 
     public function store(Request $request)
@@ -68,7 +68,7 @@ class UserController extends Controller
 
     public function showLoginForm()
     {
-        return view('user.login');
+        return view('login');
     }
 
 
@@ -137,8 +137,8 @@ class UserController extends Controller
     public function dashboard()
     {
         $user = User::where('id', auth()->id())->first();
-        $products = PurchasedProduct::where('user_id', auth()->id())->take(2)->get();
-        $contacts = Contact::where('user_id', auth()->id())->take(2)->get();
+        $products = PurchasedProduct::where('user_id', auth()->id())->latest()->take(2)->get();
+        $contacts = Contact::where('user_id', auth()->id())->latest()->take(2)->get();
         $news = News::where('status', 'published')->where('is_breaking', true)->take(3)->get();
 
         // Get counts for "See More" badges

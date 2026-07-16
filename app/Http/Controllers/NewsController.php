@@ -15,7 +15,7 @@ class NewsController extends Controller
             ->take(6)
             ->get();
 
-        return view('home', compact('news'));
+        return view('pages.home', compact('news'));
     }
 
     public function news(Request $request)

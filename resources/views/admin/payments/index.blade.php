@@ -353,7 +353,9 @@
                         <tr>
                             <th>User</th>
                             <th>Product</th>
-                            <th>Amount</th>
+                            <th>Product Amount</th>
+                            <th>GST</th>
+                            <th>Total Amount</th>
                             <th>Txn Ref</th>
                             <th>Status</th>
                             <th>Created</th>
@@ -369,6 +371,8 @@
                                 </td>
                                 <td>{{ $tp->product_type }}</td>
                                 <td>₹{{ number_format($tp->amount, 0) }}</td>
+                                <td>₹{{ number_format($tp->gst_amount, 0) }}</td>
+                                <td>₹{{ number_format($tp->total_amount, 0) }}</td>
                                 <td>{{ $tp->txn_ref }}</td>
                                 <td><span class="badge-status {{ $tp->status }}">{{ $tp->status }}</span></td>
                                 <td>{{ $tp->created_at->format('d M Y, h:i A') }}</td>

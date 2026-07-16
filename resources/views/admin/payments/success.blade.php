@@ -309,7 +309,9 @@
                         <tr>
                             <th>User</th>
                             <th>Product</th>
-                            <th>Amount</th>
+                            <th>Product Amount</th>
+                            <th>GST</th>
+                            <th>Total Amount</th>
                             <th>Txn Ref</th>
                             <th>Order ID</th>
                             <th>Paid At</th>
@@ -324,6 +326,8 @@
                                 </td>
                                 <td>{{ $p->product_type }}</td>
                                 <td>₹{{ number_format($p->amount, 0) }}</td>
+                                <td>₹{{ number_format($p->gst_amount, 0) }}</td>
+                                <td>₹{{ number_format($p->total_amount, 0) }}</td>
                                 <td>{{ $p->txn_ref }}</td>
                                 <td>{{ $p->order_id }}</td>
                                 <td>{{ optional($p->paid_at)->format('d M Y, h:i A') }}</td>

@@ -49,9 +49,11 @@ class AdminController extends Controller
                 ->count(),
 
 
-            'pending_payments'   => TempPayment::count(),
-            'success_payments'   => Payment::where('status', 'success')->count(),
-            'revenue'            => Payment::where('status', 'success')->sum('amount'),
+            'pending_payments'  => TempPayment::count(),
+            'success_payments'  => Payment::where('status', 'success')->count(),
+            'product_amount'    => Payment::where('status', 'success')->sum('amount'),
+            'total_amount'      => Payment::where('status', 'success')->sum('total_amount'),
+            'gst'               => Payment::where('status', 'success')->sum('gst_amount'),
 
             'purchased_total'    => PurchasedProduct::count(),
             'purchased_pending'  => PurchasedProduct::where('is_approved', false)->count(),
@@ -506,7 +508,7 @@ class AdminController extends Controller
 
         $product = PurchasedProduct::findOrFail($id);
         $product->tracking_id = $request->tracking_id;
-        $product->remark = $request->remark;
+        $product->admin_remark = $request->remark;
         $product->is_approved = true;
         $product->approved_at = now();
         $product->approved_by = Auth::id();

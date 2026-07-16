@@ -1,4 +1,5 @@
 <?php
+// app/Models/TempPayment.php
 
 namespace App\Models;
 
@@ -16,12 +17,16 @@ class TempPayment extends Model
         'user_email',
         'product_type',
         'amount',
+        'gst_amount',
+        'total_amount',
         'txn_ref',
         'order_id',
         'payment_session_id',
         'status',
         'payment_data',
         'raw_response',
+        'is_upgrade',
+        'upgraded_from',
         'created_at',
         'updated_at',
         'expires_at'
@@ -31,9 +36,12 @@ class TempPayment extends Model
         'payment_data' => 'array',
         'raw_response' => 'array',
         'amount' => 'decimal:2',
+        'gst_amount' => 'decimal:2',
+        'total_amount' => 'decimal:2',
         'expires_at' => 'datetime',
         'created_at'  => 'datetime',
         'updated_at'  => 'datetime',
+        'is_upgrade'  => 'boolean',
     ];
 
     public function user(): BelongsTo

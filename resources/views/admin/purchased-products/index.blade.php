@@ -31,65 +31,75 @@
                     <div class="ic">📦</div>No purchased products found.
                 </div>
             @else
-                <table class="admin-table responsive-table">
-                    <thead>
-                        <tr>
-                            <th>User</th>
-                            <th>Product</th>
-                            <th>Amount</th>
-                            <th>Txn Ref</th>
-                            <th>Status</th>
-                            <th>Tracking ID</th>
-                            <th>Purchased</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($products as $p)
+                {{-- Wrapper enables horizontal scroll on tablet/laptop/desktop instead
+                     of letting .panel's overflow:hidden clip columns out of view --}}
+                <div class="table-scroll">
+                    <table class="admin-table responsive-table">
+                        <thead>
                             <tr>
-                                <td data-label="User">
-                                    <div class="cell-name">{{ $p->user->name ?? 'N/A' }}</div>
-                                    <div class="cell-sub">{{ $p->user->email ?? '' }}</div>
-                                </td>
-                                <td data-label="Product">{{ $p->product_name ?? $p->product_type }}</td>
-                                <td data-label="Amount">₹{{ number_format($p->amount, 0) }}</td>
-                                <td data-label="Txn Ref">{{ $p->txn_ref }}</td>
-                                <td data-label="Status">
-                                    @if ($p->is_approved)
-                                        <span class="badge-status approved">Dispatched</span>
-                                    @else
-                                        <span class="badge-status pending">Pending</span>
-                                    @endif
-                                </td>
-                                <td data-label="Tracking ID">
-                                    @if ($p->tracking_id)
-                                        <strong>{{ $p->tracking_id }}</strong>
-                                        @if ($p->remark)
-                                            <div class="cell-sub" title="{{ $p->remark }}">📝
-                                                {{ \Illuminate\Support\Str::limit($p->remark, 24) }}</div>
-                                        @endif
-                                    @else
-                                        <span class="cell-sub">—</span>
-                                    @endif
-                                </td>
-                                <td data-label="Purchased">{{ optional($p->purchased_at)->format('d M Y') }}</td>
-                                <td data-label="Actions">
-                                    @if (!$p->is_approved)
-                                        <button type="button" class="btn-sm btn-approve js-open-approve-modal"
-                                            data-action-url="{{ route('admin.purchased-products.approve', $p->id) }}"
-                                            data-id="{{ $p->id }}" data-user="{{ $p->user->name ?? 'N/A' }}"
-                                            data-product="{{ $p->product_name ?? $p->product_type }}"
-                                            data-amount="{{ number_format($p->amount, 0) }}"
-                                            data-ref="{{ $p->txn_ref }}">✔ Approve</button>
-                                    @else
-                                        <span class="cell-sub">Approved
-                                            {{ optional($p->approved_at)->format('d M Y') }}</span>
-                                    @endif
-                                </td>
+                                <th>User</th>
+                                <th>Product</th>
+                                <th>Product Amount</th>
+                                <th>GST</th>
+                                <th>Total Amount</th>
+                                <th>Upgrade Remark</th>
+                                <th>Txn Ref</th>
+                                <th>Status</th>
+                                <th>Tracking ID</th>
+                                <th>Purchased</th>
+                                <th>Actions</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach ($products as $p)
+                                <tr>
+                                    <td data-label="User">
+                                        <div class="cell-name">{{ $p->user->name ?? 'N/A' }}</div>
+                                        <div class="cell-sub">{{ $p->user->email ?? '' }}</div>
+                                    </td>
+                                    <td data-label="Product">{{ $p->product_name ?? $p->product_type }}</td>
+                                    <td data-label="Product Amount">₹{{ number_format($p->amount, 0) }}</td>
+                                    <td data-label="GST">₹{{ number_format($p->gst_amount, 0) }}</td>
+                                    <td data-label="Total Amount">₹{{ number_format($p->total_amount, 0) }}</td>
+                                    <td data-label="Upgrade Remark">{{ $p->remark }}</td>
+                                    <td data-label="Txn Ref">{{ $p->txn_ref }}</td>
+                                    <td data-label="Status">
+                                        @if ($p->is_approved)
+                                            <span class="badge-status approved">Dispatched</span>
+                                        @else
+                                            <span class="badge-status pending">Pending</span>
+                                        @endif
+                                    </td>
+                                    <td data-label="Tracking ID">
+                                        @if ($p->tracking_id)
+                                            <strong>{{ $p->tracking_id }}</strong>
+                                            @if ($p->admin_remark)
+                                                <div class="cell-sub" title="{{ $p->admin_remark }}">📝
+                                                    {{ \Illuminate\Support\Str::limit($p->admin_remark, 24) }}</div>
+                                            @endif
+                                        @else
+                                            <span class="cell-sub">—</span>
+                                        @endif
+                                    </td>
+                                    <td data-label="Purchased">{{ optional($p->purchased_at)->format('d M Y') }}</td>
+                                    <td data-label="Actions">
+                                        @if (!$p->is_approved)
+                                            <button type="button" class="btn-sm btn-approve js-open-approve-modal"
+                                                data-action-url="{{ route('admin.purchased-products.approve', $p->id) }}"
+                                                data-id="{{ $p->id }}" data-user="{{ $p->user->name ?? 'N/A' }}"
+                                                data-product="{{ $p->product_name ?? $p->product_type }}"
+                                                data-amount="{{ number_format($p->amount, 0) }}"
+                                                data-ref="{{ $p->txn_ref }}">✔ Approve</button>
+                                        @else
+                                            <span class="cell-sub">Approved
+                                                {{ optional($p->approved_at)->format('d M Y') }}</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             @endif
         </div>
 
@@ -134,8 +144,8 @@
 @push('styles')
     <style>
         /* ============================================================
-             GLOBAL SAFETY
-             ============================================================ */
+                                                         GLOBAL SAFETY
+                                                         ============================================================ */
         html,
         body {
             max-width: 100%;
@@ -148,7 +158,9 @@
 
         .panel {
             max-width: 100%;
-            overflow: hidden;
+            /* Removed overflow:hidden here — it was clipping the wide table
+                           on tablet/laptop/desktop where the table is NOT stacked into
+                           cards. Scrolling is now handled by .table-scroll below. */
         }
 
         #approveProductForm {
@@ -160,9 +172,17 @@
             border-collapse: collapse;
         }
 
+        /* Horizontal scroll wrapper for the table so wide tables
+                       (11 columns) never get clipped/hidden on non-mobile widths */
+        .table-scroll {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
         /* ============================================================
-             PANEL HEAD: tabs + search (base / mobile-first styles)
-             ============================================================ */
+                                                         PANEL HEAD: tabs + search (base / mobile-first styles)
+                                                         ============================================================ */
         .panel-head {
             display: flex;
             justify-content: space-between;
@@ -201,8 +221,8 @@
         }
 
         /* ============================================================
-             MOBILE  (≤ 576px)
-             ============================================================ */
+                                                         MOBILE  (≤ 576px)
+                                                         ============================================================ */
         @media (max-width: 576px) {
             .panel {
                 padding: 12px;
@@ -236,7 +256,11 @@
                 flex: 1;
             }
 
-            /* Table -> stacked cards */
+            /* Table -> stacked cards (no horizontal scroll needed here) */
+            .table-scroll {
+                overflow-x: visible;
+            }
+
             .responsive-table thead {
                 display: none;
             }
@@ -305,8 +329,8 @@
         }
 
         /* ============================================================
-             TABLET  (577px – 991px)
-             ============================================================ */
+                                                         TABLET  (577px – 991px)
+                                                         ============================================================ */
         @media (min-width: 577px) and (max-width: 991px) {
             .panel {
                 padding: 16px;
@@ -331,14 +355,18 @@
                 flex: 1;
             }
 
-            /* Keep real table, but shrink some columns / font */
+            /* Keep real table, but shrink some columns / font.
+                           Table can now exceed the panel width safely because
+                           .table-scroll provides horizontal scrolling. */
             .admin-table {
                 font-size: 0.88rem;
+                min-width: 900px;
             }
 
             .admin-table th,
             .admin-table td {
                 padding: 8px 6px;
+                white-space: nowrap;
             }
 
             .cell-sub {
@@ -350,6 +378,7 @@
                 display: flex;
                 flex-wrap: wrap;
                 gap: 6px;
+                white-space: normal;
             }
 
             .modal-box {
@@ -358,8 +387,8 @@
         }
 
         /* ============================================================
-             LAPTOP  (992px – 1199px)
-             ============================================================ */
+                                                         LAPTOP  (992px – 1199px)
+                                                         ============================================================ */
         @media (min-width: 992px) and (max-width: 1199px) {
             .panel {
                 padding: 20px;
@@ -367,6 +396,7 @@
 
             .admin-table {
                 font-size: 0.92rem;
+                min-width: 1000px;
             }
 
             .admin-table th,
@@ -380,8 +410,8 @@
         }
 
         /* ============================================================
-             DESKTOP  (≥ 1200px)
-             ============================================================ */
+                                                         DESKTOP  (≥ 1200px)
+                                                         ============================================================ */
         @media (min-width: 1200px) {
             .panel {
                 padding: 24px;
@@ -410,8 +440,8 @@
         }
 
         /* ============================================================
-             MODAL BASE (all sizes)
-             ============================================================ */
+                                                         MODAL BASE (all sizes)
+                                                         ============================================================ */
         .modal-overlay {
             position: fixed;
             inset: 0;
