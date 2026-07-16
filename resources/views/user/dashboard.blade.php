@@ -17,18 +17,17 @@
                         <span class="badge-dot"></span>
                         Welcome Back
                     </span>
-                    <h1 class="dashboard-title">Hello, <span class="text-gold">{{ Auth::user()->name ?? 'User' }}</span> 👋
-                    </h1>
+                    <h1 class="dashboard-title">Hello, <span class="text-gold">{{ $user->name ?? 'User' }}</span> 👋</h1>
                     <p class="dashboard-subtitle">Here's what's happening with your account today.</p>
                 </div>
                 <div class="dashboard-hero-stats">
                     <div class="hero-stat">
-                        <span class="stat-number">{{ Auth::user()->created_at->diffForHumans() ?? 'New' }}</span>
+                        <span class="stat-number">{{ $user->created_at->diffForHumans() ?? 'New' }}</span>
                         <span class="stat-label">Member Since</span>
                     </div>
                     <div class="hero-stat-divider"></div>
                     <div class="hero-stat">
-                        <span class="stat-number">{{ Auth::user()->status ?? 'Active' }}</span>
+                        <span class="stat-number">{{ $user->status ?? 'Active' }}</span>
                         <span class="stat-label">Account Status</span>
                     </div>
                 </div>
@@ -47,23 +46,127 @@
 
                 {{-- Left Sidebar --}}
                 <aside class="dashboard-sidebar">
+                    {{-- Profile Card --}}
                     <div class="profile-card">
                         <div class="profile-avatar">
                             @php
-                                $name = Auth::user()->name ?? 'User';
+                                $name = $user->name ?? 'User';
                                 $initial = strtoupper(substr($name, 0, 1));
                             @endphp
                             <span class="avatar-text">{{ $initial }}</span>
-                            <span
-                                class="avatar-status {{ Auth::user()->status === 'active' ? 'online' : 'offline' }}"></span>
+                            <span class="avatar-status {{ $user->status === 'active' ? 'online' : 'offline' }}"></span>
                         </div>
-                        <h3 class="profile-name">{{ Auth::user()->name ?? 'User' }}</h3>
-                        <p class="profile-email">{{ Auth::user()->email ?? 'user@example.com' }}</p>
+                        <h3 class="profile-name">{{ $user->name ?? 'User' }}</h3>
+                        <p class="profile-email">{{ $user->email ?? 'user@example.com' }}</p>
                         <div class="profile-status">
-                            <span class="status-badge {{ Auth::user()->status === 'active' ? 'active' : 'pending' }}">
-                                {{ Auth::user()->status ?? 'Pending' }}
+                            <span class="status-badge {{ $user->status === 'active' ? 'active' : 'pending' }}">
+                                {{ $user->status ?? 'Pending' }}
                             </span>
                         </div>
+                    </div>
+
+                    {{-- User Details Card --}}
+                    <div class="profile-details-card">
+                        <h4 class="details-title">User Details</h4>
+                        <div class="details-grid">
+                            <div class="detail-item">
+                                <span class="detail-label">Name</span>
+                                <span class="detail-value">{{ $user->name ?? 'Not provided' }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Mobile</span>
+                                <span class="detail-value">{{ $user->mobile ?? 'Not provided' }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">State</span>
+                                <span class="detail-value">{{ $user->state ?? 'Not provided' }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">District</span>
+                                <span class="detail-value">{{ $user->district ?? 'Not provided' }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Tehsil</span>
+                                <span class="detail-value">{{ $user->tehsil ?? 'Not provided' }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">City</span>
+                                <span class="detail-value">{{ $user->city ?? 'Not provided' }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Pincode</span>
+                                <span class="detail-value">{{ $user->pincode ?? 'Not provided' }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Member Since</span>
+                                <span
+                                    class="detail-value">{{ $user->created_at ? $user->created_at->format('d M, Y') : 'New' }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Sidebar Navigation --}}
+                    <div class="sidebar-nav">
+                        <a href="{{ route('dashboard') }}" class="sidebar-nav-item active">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+                                <polyline points="9 22 9 12 15 12 15 22" />
+                            </svg>
+                            Dashboard
+                        </a>
+                        <a href="{{ route('profile') }}" class="sidebar-nav-item">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                                <circle cx="12" cy="7" r="4" />
+                            </svg>
+                            Profile
+                        </a>
+                        <a href="{{ route('user.products') }}" class="sidebar-nav-item">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                                <line x1="3" y1="6" x2="21" y2="6" />
+                                <path d="M16 10a4 4 0 01-8 0" />
+                            </svg>
+                            Purchases
+                            @if ($totalProducts > 0)
+                                <span class="nav-badge">{{ $totalProducts }}</span>
+                            @endif
+                        </a>
+                        <a href="{{ route('user.contacts') }}" class="sidebar-nav-item">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+                            </svg>
+                            Contacts
+                            @if ($totalContacts > 0)
+                                <span class="nav-badge">{{ $totalContacts }}</span>
+                            @endif
+                        </a>
+                        <a href="#" class="sidebar-nav-item">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="12" cy="12" r="3" />
+                                <path
+                                    d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" />
+                            </svg>
+                            Settings
+                        </a>
+                        <a href="{{ route('logout') }}" class="sidebar-nav-item logout"
+                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" />
+                                <polyline points="16 17 21 12 16 7" />
+                                <line x1="21" y1="12" x2="9" y2="12" />
+                            </svg>
+                            Logout
+                        </a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
                     </div>
                 </aside>
 
@@ -74,152 +177,244 @@
                     <div class="stats-grid">
                         <div class="stat-card">
                             <div class="stat-card-icon blue">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
                                     <path d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                 </svg>
                             </div>
                             <div class="stat-card-info">
-                                <span class="stat-card-number">0</span>
-                                <span class="stat-card-label">Total Posts</span>
+                                <span class="stat-card-number">{{ $totalProducts }}</span>
+                                <span class="stat-card-label">Total Purchases</span>
                             </div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-card-icon green">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
                                     <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
                                     <circle cx="12" cy="7" r="4" />
                                 </svg>
                             </div>
                             <div class="stat-card-info">
-                                <span class="stat-card-number">0</span>
-                                <span class="stat-card-label">Followers</span>
+                                <span class="stat-card-number">{{ $totalContacts }}</span>
+                                <span class="stat-card-label">Total Contacts</span>
                             </div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-card-icon orange">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
                                     <path d="M4 4v16h16" />
                                     <polyline points="20 10 12 18 8 14" />
                                 </svg>
                             </div>
                             <div class="stat-card-info">
-                                <span class="stat-card-number">0</span>
-                                <span class="stat-card-label">Reports</span>
+                                <span class="stat-card-number">{{ $totalNews }}</span>
+                                <span class="stat-card-label">Breaking News</span>
                             </div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-card-icon purple">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
                                     <path d="M12 2L2 7l10 5 10-5-10-5z" />
                                     <path d="M2 17l10 5 10-5" />
                                     <path d="M2 12l10 5 10-5" />
                                 </svg>
                             </div>
                             <div class="stat-card-info">
-                                <span class="stat-card-number">0</span>
-                                <span class="stat-card-label">Submissions</span>
+                                <span
+                                    class="stat-card-number">{{ $user->created_at ? $user->created_at->format('Y') : 'New' }}</span>
+                                <span class="stat-card-label">Member Since</span>
                             </div>
                         </div>
                     </div>
 
-                    {{-- Recent Activity --}}
-                    <div class="recent-activity">
+                    {{-- Purchased Products Section --}}
+                    <div class="section-card">
                         <div class="section-header">
-                            <h3 class="section-title">Recent Activity</h3>
-                            <a href="#" class="view-all">View All →</a>
-                        </div>
-                        <div class="activity-list">
-                            <div class="activity-item">
-                                <div class="activity-icon blue">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="2">
-                                        <path d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                    </svg>
-                                </div>
-                                <div class="activity-content">
-                                    <p class="activity-text">Welcome to Bharat Integrity Forum News! 🎉</p>
-                                    <span class="activity-time">Just now</span>
-                                </div>
-                            </div>
-                            <div class="activity-item">
-                                <div class="activity-icon green">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="2">
-                                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
-                                        <circle cx="12" cy="7" r="4" />
-                                    </svg>
-                                </div>
-                                <div class="activity-content">
-                                    <p class="activity-text">Your account is now <strong>active</strong> ✅</p>
-                                    <span
-                                        class="activity-time">{{ Auth::user()->created_at ? Auth::user()->created_at->format('d M, Y') : 'Recent' }}</span>
-                                </div>
-                            </div>
-                            <div class="activity-item">
-                                <div class="activity-icon orange">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="2">
-                                        <path d="M4 4v16h16" />
-                                        <polyline points="20 10 12 18 8 14" />
-                                    </svg>
-                                </div>
-                                <div class="activity-content">
-                                    <p class="activity-text">Start your first news submission today! 📰</p>
-                                    <span class="activity-time">-</span>
-                                </div>
+                            <h3 class="section-title">Purchased Products</h3>
+                            <div class="section-actions">
+                                @if ($totalProducts > 0)
+                                    <a href="{{ route('user.products') }}" class="view-all-link">View All</a>
+                                @endif
                             </div>
                         </div>
+                        @if ($products->count() > 0)
+                            <div class="product-list">
+                                @foreach ($products as $product)
+                                    <div class="list-item">
+                                        <div class="item-icon product">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                                                <line x1="3" y1="6" x2="21" y2="6" />
+                                                <path d="M16 10a4 4 0 01-8 0" />
+                                            </svg>
+                                        </div>
+                                        <div class="item-content">
+                                            <p class="item-title">{{ $product->product_name }}</p>
+                                            <span class="item-meta">
+                                                Type: {{ ucfirst($product->product_type) }} •
+                                                ₹{{ number_format($product->amount, 2) }} •
+                                                {{ $product->purchased_at ? $product->purchased_at->format('d M, Y') : 'Recent' }}
+                                            </span>
+                                        </div>
+                                        <div class="item-actions">
+                                            <span
+                                                class="item-status {{ $product->payment_status === 'completed' ? 'success' : ($product->payment_status === 'pending' ? 'pending' : 'failed') }}">
+                                                {{ ucfirst($product->payment_status) }}
+                                            </span>
+                                            @if ($product->tracking_id)
+                                                <span class="item-tracking">#{{ $product->tracking_id }}</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="empty-state">
+                                <div class="empty-icon">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="1.5">
+                                        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+                                        <line x1="3" y1="6" x2="21" y2="6" />
+                                        <path d="M16 10a4 4 0 01-8 0" />
+                                    </svg>
+                                </div>
+                                <p>No purchased products yet.</p>
+                                <a href="{{ route('products') }}" class="empty-action">Browse Products</a>
+                            </div>
+                        @endif
                     </div>
 
-                    {{-- Quick Actions --}}
-                    <div class="quick-actions">
+                    {{-- Contacts Section --}}
+                    <div class="section-card">
                         <div class="section-header">
-                            <h3 class="section-title">Quick Actions</h3>
+                            <h3 class="section-title">Recent Contacts</h3>
+                            <div class="section-actions">
+                                @if ($totalContacts > 0)
+                                    <a href="{{ route('user.contacts') }}" class="view-all-link">View All</a>
+                                @endif
+                            </div>
                         </div>
-                        <div class="actions-grid">
-                            <a href="#" class="action-card">
-                                <div class="action-icon">
-                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="1.5">
-                                        <path d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                    </svg>
-                                </div>
-                                <span class="action-label">New Post</span>
-                            </a>
-                            <a href="#" class="action-card">
-                                <div class="action-icon">
-                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="1.5">
-                                        <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                    </svg>
-                                </div>
-                                <span class="action-label">Edit Profile</span>
-                            </a>
-                            <a href="#" class="action-card">
-                                <div class="action-icon">
-                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="1.5">
-                                        <path d="M4 4v16h16" />
-                                        <polyline points="20 10 12 18 8 14" />
-                                    </svg>
-                                </div>
-                                <span class="action-label">View Reports</span>
-                            </a>
-                            <a href="#" class="action-card">
-                                <div class="action-icon">
-                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+                        @if ($contacts->count() > 0)
+                            <div class="contact-list">
+                                @foreach ($contacts as $contact)
+                                    <div class="list-item">
+                                        <div class="item-icon contact">
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                                stroke="currentColor" stroke-width="2">
+                                                <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
+                                            </svg>
+                                        </div>
+                                        <div class="item-content">
+                                            <p class="item-title">{{ $contact->name }}</p>
+                                            <span class="item-meta">
+                                                {{ $contact->subject }} •
+                                                {{ $contact->created_at->format('d M, Y') }}
+                                                @if ($contact->mobile)
+                                                    • 📱 {{ $contact->mobile }}
+                                                @endif
+                                            </span>
+                                        </div>
+                                        <div class="item-actions">
+                                            <span
+                                                class="item-status {{ $contact->status === 'replied' ? 'success' : ($contact->status === 'read' ? 'info' : 'pending') }}">
+                                                {{ ucfirst($contact->status) }}
+                                            </span>
+                                            @if ($contact->admin_reply)
+                                                <span class="item-tracking">Replied</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="empty-state">
+                                <div class="empty-icon">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none"
                                         stroke="currentColor" stroke-width="1.5">
                                         <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
                                     </svg>
                                 </div>
-                                <span class="action-label">Submit News</span>
-                            </a>
-                        </div>
+                                <p>No contacts yet.</p>
+                                <a href="{{ route('contact.create') }}" class="empty-action">Create Contact</a>
+                            </div>
+                        @endif
                     </div>
+
+                    {{-- News Section --}}
+                    <div class="section-card">
+                        <div class="section-header">
+                            <h3 class="section-title">Breaking News</h3>
+                            <div class="section-actions">
+                                @if ($totalNews > 0)
+                                    <a href="{{ route('news.news') }}" class="view-all-link">View All</a>
+                                @endif
+                            </div>
+                        </div>
+                        @if ($news->count() > 0)
+                            <div class="news-grid">
+                                @foreach ($news as $newsItem)
+                                    <div class="news-item">
+                                        @if ($newsItem->featured_image)
+                                            <div class="news-image"
+                                                style="background-image: url('{{ asset('storage/' . $newsItem->featured_image) }}')">
+                                            </div>
+                                        @else
+                                            <div class="news-image"
+                                                style="background-image: url('{{ asset('images/default-news.jpg') }}')">
+                                            </div>
+                                        @endif
+                                        <div class="news-content">
+                                            <span class="news-badge">
+                                                <span class="badge-dot-small"></span>
+                                                Breaking
+                                            </span>
+                                            <h4 class="news-title">{{ Str::limit($newsItem->title, 60) }}</h4>
+                                            <p class="news-excerpt">
+                                                {{ Str::limit($newsItem->short_description ?? $newsItem->content, 80) }}
+                                            </p>
+                                            <div class="news-meta">
+                                                <span class="news-date">
+                                                    <svg width="14" height="14" viewBox="0 0 24 24"
+                                                        fill="none" stroke="currentColor" stroke-width="2">
+                                                        <rect x="3" y="4" width="18" height="18" rx="2"
+                                                            ry="2" />
+                                                        <line x1="16" y1="2" x2="16"
+                                                            y2="6" />
+                                                        <line x1="8" y1="2" x2="8"
+                                                            y2="6" />
+                                                        <line x1="3" y1="10" x2="21"
+                                                            y2="10" />
+                                                    </svg>
+                                                    {{ $newsItem->published_at ? $newsItem->published_at->format('d M, Y') : 'Recent' }}
+                                                </span>
+                                                <a href="{{ route('news.show', $newsItem->slug) }}" class="read-more">
+                                                    Read More →
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="empty-state">
+                                <div class="empty-icon">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="1.5">
+                                        <path d="M4 4v16h16" />
+                                        <polyline points="20 10 12 18 8 14" />
+                                    </svg>
+                                </div>
+                                <p>No breaking news available.</p>
+                                <a href="{{ route('news') }}" class="empty-action">View All News</a>
+                            </div>
+                        @endif
+                    </div>
+
+
 
                 </main>
             </div>
@@ -401,7 +596,7 @@
 
         .dashboard-grid {
             display: grid;
-            grid-template-columns: 280px 1fr;
+            grid-template-columns: 300px 1fr;
             gap: 30px;
         }
 
@@ -495,8 +690,53 @@
             color: #b45309;
         }
 
+        /* Profile Details */
+        .profile-details-card {
+            background: #fff;
+            border-radius: 16px;
+            padding: 20px 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .details-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin: 0 0 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px 20px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .detail-label {
+            font-size: 11px;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+        }
+
         /* Sidebar Navigation */
         .sidebar-nav {
+            background: #fff;
             border-radius: 16px;
             padding: 8px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
@@ -504,7 +744,16 @@
             display: flex;
             flex-direction: column;
             gap: 2px;
-            background: #0e0e22;
+        }
+
+        .sidebar-nav a {
+            color: rgb(6 6 6 / 85%);
+        }
+
+        .sidebar-nav a.active {
+            background: rgb(86 83 64 / 12%);
+            color: #099716;
+            border-left-color: #3c9d6a;
         }
 
         .sidebar-nav-item {
@@ -658,8 +907,8 @@
             font-weight: 500;
         }
 
-        /* Recent Activity */
-        .recent-activity {
+        /* Section Cards */
+        .section-card {
             background: #fff;
             border-radius: 16px;
             padding: 24px 28px;
@@ -681,6 +930,12 @@
             margin: 0;
         }
 
+        .section-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
         .view-all {
             color: #e74c3c;
             text-decoration: none;
@@ -694,138 +949,262 @@
             text-decoration: underline;
         }
 
-        .activity-list {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
+        .view-all-link {
+            color: #3498db;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            transition: color 0.2s;
         }
 
-        .activity-item {
+        .view-all-link:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+
+        /* List Items */
+        .list-item {
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             gap: 14px;
             padding: 12px 0;
             border-bottom: 1px solid #f0f0f0;
         }
 
-        .activity-item:last-child {
+        .list-item:last-child {
             border-bottom: none;
             padding-bottom: 0;
         }
 
-        .activity-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
+        .item-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            margin-top: 2px;
         }
 
-        .activity-icon.blue {
+        .item-icon.product {
             background: rgba(52, 152, 219, 0.1);
             color: #3498db;
         }
 
-        .activity-icon.green {
+        .item-icon.contact {
             background: rgba(46, 204, 113, 0.1);
             color: #2ecc71;
         }
 
-        .activity-icon.orange {
-            background: rgba(243, 156, 18, 0.1);
-            color: #f39c12;
-        }
-
-        .activity-content {
+        .item-content {
             flex: 1;
         }
 
-        .activity-text {
+        .item-title {
             font-size: 14px;
-            color: #333;
-            margin: 0 0 4px;
-            line-height: 1.5;
-        }
-
-        .activity-text strong {
+            font-weight: 600;
             color: #1a1a2e;
+            margin: 0 0 2px;
         }
 
-        .activity-time {
+        .item-meta {
             font-size: 12px;
             color: #aaa;
         }
 
-        /* Quick Actions */
-        .quick-actions {
-            background: #fff;
-            border-radius: 16px;
-            padding: 24px 28px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            border: 1px solid rgba(0, 0, 0, 0.04);
-        }
-
-        .actions-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 14px;
-        }
-
-        .action-card {
+        .item-actions {
             display: flex;
-            flex-direction: column;
             align-items: center;
             gap: 10px;
-            padding: 20px 16px;
+            flex-shrink: 0;
+        }
+
+        .item-status {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 3px 12px;
+            border-radius: 50px;
+        }
+
+        .item-status.success {
+            background: #f0fdf4;
+            color: #1e8449;
+        }
+
+        .item-status.pending {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        .item-status.failed {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+
+        .item-status.info {
+            background: #f0f9ff;
+            color: #1a6ea8;
+        }
+
+        .item-tracking {
+            font-size: 11px;
+            color: #888;
+            background: #f0f0f0;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        /* News Grid */
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .news-item {
             border-radius: 12px;
-            background: #f8f9fa;
-            text-decoration: none;
-            color: #333;
+            overflow: hidden;
+            border: 1px solid #f0f0f0;
             transition: all 0.3s ease;
-            border: 1px solid transparent;
         }
 
-        .action-card:hover {
-            background: #fff;
-            border-color: #e74c3c;
+        .news-item:hover {
             transform: translateY(-4px);
-            box-shadow: 0 8px 25px rgba(231, 76, 60, 0.1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
         }
 
-        .action-icon {
-            width: 52px;
-            height: 52px;
-            border-radius: 12px;
-            background: rgba(231, 76, 60, 0.06);
-            color: #e74c3c;
+        .news-image {
+            height: 150px;
+            background-size: cover;
+            background-position: center;
+            background-color: #f0f0f0;
+        }
+
+        .news-content {
+            padding: 16px 18px 18px;
+        }
+
+        .news-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #e74c3c;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 3px 12px;
+            border-radius: 50px;
+            margin-bottom: 8px;
+        }
+
+        .badge-dot-small {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #fff;
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        .news-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin: 0 0 8px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .news-excerpt {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+            margin: 0 0 12px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .news-meta {
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .news-date {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .read-more {
+            color: #e74c3c;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .read-more:hover {
+            color: #c0392b;
+            text-decoration: underline;
+        }
+
+
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        .empty-icon {
+            margin-bottom: 16px;
+            color: #ccc;
+        }
+
+        .empty-state p {
+            margin: 0 0 16px;
+            font-size: 14px;
+        }
+
+        .empty-action {
+            display: inline-block;
+            padding: 8px 24px;
+            background: #e74c3c;
+            color: #fff;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
             transition: all 0.3s ease;
         }
 
-        .action-card:hover .action-icon {
-            background: rgba(231, 76, 60, 0.12);
-            transform: scale(1.05);
-        }
-
-        .action-label {
-            font-size: 13px;
-            font-weight: 600;
-            color: #555;
-            text-align: center;
-        }
-
-        .action-card:hover .action-label {
-            color: #e74c3c;
+        .empty-action:hover {
+            background: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+            color: #fff;
         }
 
         /* ===================================================== */
         /* ==================   RESPONSIVE   ===================== */
         /* ===================================================== */
+        @media (max-width: 1200px) {
+            .dashboard-grid {
+                grid-template-columns: 280px 1fr;
+                gap: 24px;
+            }
+        }
+
         @media (max-width: 1024px) {
             .dashboard-grid {
                 grid-template-columns: 1fr;
@@ -835,6 +1214,14 @@
                 display: grid;
                 grid-template-columns: 1fr 1fr;
                 gap: 20px;
+            }
+
+            .news-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr 1fr;
             }
         }
 
@@ -866,13 +1253,32 @@
                 grid-template-columns: 1fr;
             }
 
-            .recent-activity,
+            .section-card {
+                padding: 20px 18px;
+            }
+
             .quick-actions {
                 padding: 20px 18px;
             }
 
             .hero-stat-divider {
                 display: none;
+            }
+
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .list-item {
+                flex-wrap: wrap;
+            }
+
+            .item-actions {
+                margin-left: auto;
             }
         }
 
@@ -913,6 +1319,14 @@
                 height: 40px;
             }
 
+            .section-card {
+                padding: 16px 14px;
+            }
+
+            .quick-actions {
+                padding: 16px 14px;
+            }
+
             .actions-grid {
                 grid-template-columns: 1fr 1fr;
                 gap: 10px;
@@ -930,12 +1344,16 @@
             .action-label {
                 font-size: 12px;
             }
-        }
 
-        .container {
-            /* max-width: 1200px;
-                margin: 0 auto;
-                padding: 0 20px; */
+            .news-image {
+                height: 120px;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
         }
     </style>
 @endpush

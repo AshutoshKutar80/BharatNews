@@ -136,7 +136,17 @@ class UserController extends Controller
 
     public function dashboard()
     {
-        return view('user.dashboard');
+        $user = User::where('id', auth()->id())->first();
+        $products = PurchasedProduct::where('user_id', auth()->id())->take(2)->get();
+        $contacts = Contact::where('user_id', auth()->id())->take(2)->get();
+        $news = News::where('status', 'published')->where('is_breaking', true)->take(3)->get();
+
+        // Get counts for "See More" badges
+        $totalProducts = PurchasedProduct::where('user_id', auth()->id())->count();
+        $totalContacts = Contact::where('user_id', auth()->id())->count();
+        $totalNews = News::where('status', 'published')->where('is_breaking', true)->count();
+
+        return view('user.dashboard', compact('user', 'products', 'contacts', 'news', 'totalProducts', 'totalContacts', 'totalNews'));
     }
 
     /**
